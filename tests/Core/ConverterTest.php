@@ -227,6 +227,46 @@ class ConverterTest extends TestCase {
 		$this->assertConditionsMet();
 	}
 
+	public function test_get_options_returns_back_options_with_quality_set_when_quality_is_set_to_empty_string() {
+		$converter = Mockery::mock( Converter::class )->makePartial();
+		$converter->shouldAllowMockingProtectedMethods();
+
+		WP_Mock::userFunction( 'get_option' )
+			->once()
+			->with( 'icfw', [] )
+			->andReturn(
+				[
+					'quality' => '',
+				]
+			);
+
+		WP_Mock::userFunction( 'wp_parse_args' )
+			->andReturnUsing(
+				function ( $args, $defaults ) {
+					return array_merge( $defaults, $args );
+				}
+			);
+
+		$expected_array = [
+			'quality'     => 20,
+			'max-quality' => 100,
+			'converter'   => 'gd',
+		];
+
+		WP_Mock::expectFilter(
+			'icfw_options',
+			$expected_array
+		);
+
+		$options = $converter->get_options();
+
+		$this->assertSame(
+			$options,
+			$expected_array
+		);
+		$this->assertConditionsMet();
+	}
+
 	public function test_set_image_source() {
 		$service = Mockery::mock( Main::class )->makePartial();
 		$service->shouldAllowMockingProtectedMethods();

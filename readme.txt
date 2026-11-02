@@ -70,6 +70,9 @@ Want to add your personal touch? All of our documentation can be found [here](ht
 
 == Changelog ==
 
+= 1.7.0 =
+* Fix: Set default quality to 20 when the quality isn't set.
+
 = 1.6.0 =
 * Feat: Add `More Plugins` options page.
 

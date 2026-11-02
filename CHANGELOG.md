@@ -1,5 +1,8 @@
 # Changelog
 
+## 1.7.0
+* Fix: Set default quality to 20 when the quality isn't set.
+
 ## 1.6.0
 * Feat: Add `More Plugins` options page.
 
