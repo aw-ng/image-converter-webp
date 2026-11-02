@@ -229,7 +229,7 @@ class Converter {
 		$settings = get_option( 'icfw', [] );
 
 		// Make sure this array key is integer.
-		$settings['quality'] = (int) ( $settings['quality'] ?? 0 );
+		$settings['quality'] = (int) ( empty($settings['quality']) ? 20 : $settings['quality'] );
 
 		$options = wp_parse_args(
 			$settings,
