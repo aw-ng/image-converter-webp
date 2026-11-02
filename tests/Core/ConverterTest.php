@@ -212,9 +212,11 @@ class ConverterTest extends TestCase {
 			);
 
 		WP_Mock::userFunction( 'wp_parse_args' )
-			->andReturnUsing( function( $args, $defaults ) {
-				return array_merge( $defaults, $args );
-			} );
+			->andReturnUsing(
+				function ( $args, $defaults ) {
+					return array_merge( $defaults, $args );
+				}
+			);
 
 		$expected_array = [
 			'quality'     => 20,
