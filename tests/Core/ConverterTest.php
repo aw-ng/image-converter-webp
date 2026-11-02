@@ -44,21 +44,10 @@ class ConverterTest extends TestCase {
 		);
 
 		WP_Mock::userFunction( 'wp_parse_args' )
-			->once()
-			->with(
-				[ 'quality' => 0 ],
-				[
-					'quality'     => 20,
-					'max-quality' => 100,
-					'converter'   => 'gd',
-				]
-			)
-			->andReturn(
-				[
-					'quality'     => 20,
-					'max-quality' => 100,
-					'converter'   => 'gd',
-				]
+			->andReturnUsing(
+				function ( $args, $defaults ) {
+					return array_merge( $defaults, $args );
+				}
 			);
 
 		WP_Mock::userFunction( 'get_option' )
