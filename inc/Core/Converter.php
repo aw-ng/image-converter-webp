@@ -250,7 +250,7 @@ class Converter {
 		);
 
 		$options['converter'] =
-			in_array( $options['converter'], $allowed_engines )
+			in_array( $options['converter'], $allowed_engines, true )
 			? $options['converter']
 			: 'gd';
 
