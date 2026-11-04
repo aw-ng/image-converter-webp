@@ -276,7 +276,7 @@ class ConverterTest extends TestCase {
 			->with( 'icfw', [] )
 			->andReturn(
 				[
-					'quality' => '',
+					'quality'   => '',
 					'converter' => 'unknown',
 				]
 			);
@@ -305,7 +305,7 @@ class ConverterTest extends TestCase {
 			$options,
 			$expected_array
 		);
-		$this->assertCount(3, $options);
+		$this->assertCount( 3, $options );
 
 		$this->assertConditionsMet();
 	}
