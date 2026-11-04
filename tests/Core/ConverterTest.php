@@ -39,14 +39,14 @@ class ConverterTest extends TestCase {
 			->with( 'icfw', [] )
 			->andReturn(
 				[
-					'quality' => 0
+					'quality' => 0,
 				]
 			);
 
 		WP_Mock::expectFilter(
 			'icfw_options',
 			[
-				'quality' => 0
+				'quality' => 0,
 			]
 		);
 
@@ -249,7 +249,7 @@ class ConverterTest extends TestCase {
 			'converter' => 'unknown',
 			'log'       => '1',
 			'page_load' => '1',
-			'age'       => 35
+			'age'       => 35,
 		];
 
 		WP_Mock::userFunction( 'get_option' )

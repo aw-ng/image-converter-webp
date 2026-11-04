@@ -228,7 +228,7 @@ class Converter {
 	protected function get_options(): array {
 		$options = get_option( 'icfw', [] );
 
-		$default_engine = 'gd';
+		$default_engine  = 'gd';
 		$default_quality = 20;
 
 		/**
