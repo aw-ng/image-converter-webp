@@ -240,6 +240,20 @@ class Converter {
 			]
 		);
 
+		$allowed_settings = [ "quality", "max-quality", "converter" ];
+		$allowed_engines = [ "gd", "cwebp", "ffmpeg", "imagick", "gmagick" ];
+
+		$options = array_filter(
+			$options,
+			fn( $key ) => in_array( $key, $allowed_settings, true ),
+			ARRAY_FILTER_USE_KEY
+		);
+
+		$options["converter"] =
+			in_array( $options["converter"], $allowed_engines )
+			? $options["converter"]
+			: "gd";
+
 		/**
 		 * Get Conversion options.
 		 *
