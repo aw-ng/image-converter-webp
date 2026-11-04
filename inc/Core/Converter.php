@@ -248,7 +248,7 @@ class Converter {
 		];
 
 		// Validate the converter option against the allowed engines.
-		if ( ! empty( $options['converter'] ) ) {
+		if ( isset( $options['converter'] ) ) {
 			$options['converter'] =
 				in_array(
 					$options['converter'],
@@ -266,6 +266,16 @@ class Converter {
 			// Ensure the quality is set to a value greater than zero.
 			if ( ! $options['quality'] || ( $options['quality'] < 0 ) ) {
 				$options['quality'] = $default['quality'];
+			}
+		}
+
+		// Ensure the max-quality is a valid integer.
+		if ( isset( $options['max-quality'] ) ) {
+			$options['max-quality'] = (int) $options['max-quality'];
+
+			// Ensure the max-quality is set to a value greater than zero.
+			if ( ! $options['max-quality'] || ( $options['max-quality'] < 0 ) ) {
+				$options['max-quality'] = $default['max-quality'];
 			}
 		}
 
