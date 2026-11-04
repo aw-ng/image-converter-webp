@@ -254,11 +254,11 @@ class Converter {
 				: $default_engine;
 		}
 
-		// Ensure the quality is within the valid range (0-100).
+		// Ensure the quality is a valid integer.
 		if ( isset( $options['quality'] ) ) {
 			$options['quality'] = (int) $options['quality'];
 
-			// Ensure if the quality is set to a value greater than zero.
+			// Ensure the quality is set to a value greater than zero.
 			if ( ! $options['quality'] || ( $options['quality'] < 0 ) ) {
 				$options['quality'] = $default_quality;
 			}
