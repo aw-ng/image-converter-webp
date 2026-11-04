@@ -228,9 +228,6 @@ class Converter {
 	protected function get_options(): array {
 		$options = get_option( 'icfw', [] );
 
-		$default_engine  = 'gd';
-		$default_quality = 20;
-
 		/**
 		 * Get Conversion options.
 		 *
@@ -243,15 +240,23 @@ class Converter {
 		 */
 		$options = (array) apply_filters( 'icfw_options', $options );
 
-		// Allowed list of valid image processing engines.
-		$allowed_engines = [ 'gd', 'cwebp', 'ffmpeg', 'imagick', 'gmagick' ];
+		// Default conversion options.
+		$default = [
+			'quality'     => 20,
+			'max-quality' => 100,
+			'converter'   => 'gd',
+		];
 
 		// Validate the converter option against the allowed engines.
 		if ( ! empty( $options['converter'] ) ) {
 			$options['converter'] =
-				in_array( $options['converter'], $allowed_engines, true )
+				in_array(
+					$options['converter'],
+					[ 'gd', 'cwebp', 'ffmpeg', 'imagick', 'gmagick' ],
+					true
+				)
 				? $options['converter']
-				: $default_engine;
+				: $default['converter'];
 		}
 
 		// Ensure the quality is a valid integer.
@@ -260,26 +265,16 @@ class Converter {
 
 			// Ensure the quality is set to a value greater than zero.
 			if ( ! $options['quality'] || ( $options['quality'] < 0 ) ) {
-				$options['quality'] = $default_quality;
+				$options['quality'] = $default['quality'];
 			}
 		}
 
 		// Fallback to sensible default options.
-		$options = wp_parse_args(
-			$options,
-			[
-				'quality'     => $default_quality,
-				'max-quality' => 100,
-				'converter'   => $default_engine,
-			]
-		);
-
-		// Only allow specific settings to be returned.
-		$allowed_settings = [ 'quality', 'max-quality', 'converter' ];
+		$options = wp_parse_args( $options, $default );
 
 		return array_filter(
 			$options,
-			fn( $key ) => in_array( $key, $allowed_settings, true ),
+			fn( $key ) => in_array( $key, array_keys( $default ), true ),
 			ARRAY_FILTER_USE_KEY
 		);
 	}
