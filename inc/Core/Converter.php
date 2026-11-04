@@ -226,33 +226,10 @@ class Converter {
 	 * @return mixed[]
 	 */
 	protected function get_options(): array {
-		$settings = get_option( 'icfw', [] );
+		$options = get_option( 'icfw', [] );
 
-		// Make sure this array key is integer.
-		$settings['quality'] = (int) ( empty( $settings['quality'] ) ? 20 : $settings['quality'] );
-
-		$options = wp_parse_args(
-			$settings,
-			[
-				'quality'     => 20,
-				'max-quality' => 100,
-				'converter'   => 'gd',
-			]
-		);
-
-		$allowed_settings = [ 'quality', 'max-quality', 'converter' ];
-		$allowed_engines  = [ 'gd', 'cwebp', 'ffmpeg', 'imagick', 'gmagick' ];
-
-		$options = array_filter(
-			$options,
-			fn( $key ) => in_array( $key, $allowed_settings, true ),
-			ARRAY_FILTER_USE_KEY
-		);
-
-		$options['converter'] =
-			in_array( $options['converter'], $allowed_engines, true )
-			? $options['converter']
-			: 'gd';
+		$default_engine = 'gd';
+		$default_quality = 20;
 
 		/**
 		 * Get Conversion options.
@@ -264,6 +241,46 @@ class Converter {
 		 * @param mixed[] $options Conversion options.
 		 * @return mixed[]
 		 */
-		return (array) apply_filters( 'icfw_options', $options );
+		$options = (array) apply_filters( 'icfw_options', $options );
+
+		// Allowed list of valid image processing engines.
+		$allowed_engines = [ 'gd', 'cwebp', 'ffmpeg', 'imagick', 'gmagick' ];
+
+		// Validate the converter option against the allowed engines.
+		if ( ! empty( $options['converter'] ) ) {
+			$options['converter'] =
+				in_array( $options['converter'], $allowed_engines, true )
+				? $options['converter']
+				: $default_engine;
+		}
+
+		// Ensure the quality is within the valid range (0-100).
+		if ( isset( $options['quality'] ) ) {
+			$options['quality'] = (int) $options['quality'];
+
+			// Ensure if the quality is set to a value greater than zero.
+			if ( ! $options['quality'] || ( $options['quality'] < 0 ) ) {
+				$options['quality'] = $default_quality;
+			}
+		}
+
+		// Fallback to sensible default options.
+		$options = wp_parse_args(
+			$options,
+			[
+				'quality'     => $default_quality,
+				'max-quality' => 100,
+				'converter'   => $default_engine,
+			]
+		);
+
+		// Only allow specific settings to be returned.
+		$allowed_settings = [ 'quality', 'max-quality', 'converter' ];
+
+		return array_filter(
+			$options,
+			fn( $key ) => in_array( $key, $allowed_settings, true ),
+			ARRAY_FILTER_USE_KEY
+		);
 	}
 }
