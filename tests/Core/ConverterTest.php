@@ -200,7 +200,7 @@ class ConverterTest extends TestCase {
 		$this->assertConditionsMet();
 	}
 
-	public function test_get_options_returns_back_options_with_quality_set_when_quality_is_set_to_empty_string() {
+	public function test_get_options_returns_options_that_are_not_empty_strings() {
 		$converter = Mockery::mock( Converter::class )->makePartial();
 		$converter->shouldAllowMockingProtectedMethods();
 
@@ -209,14 +209,18 @@ class ConverterTest extends TestCase {
 			->with( 'icfw', [] )
 			->andReturn(
 				[
-					'quality' => '',
+					'quality'   => '',
+					'max-quality' => '',
+					'converter' => '',
 				]
 			);
 
 		WP_Mock::expectFilter(
 			'icfw_options',
 			[
-				'quality' => '',
+				'quality'   => '',
+				'max-quality' => '',
+				'converter' => '',
 			]
 		);
 
