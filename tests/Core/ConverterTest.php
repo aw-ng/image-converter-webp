@@ -209,18 +209,18 @@ class ConverterTest extends TestCase {
 			->with( 'icfw', [] )
 			->andReturn(
 				[
-					'quality'   => '',
+					'quality'     => '',
 					'max-quality' => '',
-					'converter' => '',
+					'converter'   => '',
 				]
 			);
 
 		WP_Mock::expectFilter(
 			'icfw_options',
 			[
-				'quality'   => '',
+				'quality'     => '',
 				'max-quality' => '',
-				'converter' => '',
+				'converter'   => '',
 			]
 		);
 
