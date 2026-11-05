@@ -59,6 +59,9 @@ class LoggerTest extends WPMockTestCase {
 		$webp->shouldReceive( 'get_error_message' )
 			->andReturn( 'Fatal Error: sample.pdf is not an image...' );
 
+		$webp->shouldReceive( 'get_error_code' )
+			->andReturn( 'webp-img-error' );
+
 		$options = [
 			'logs' => true,
 		];

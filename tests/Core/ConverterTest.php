@@ -426,6 +426,48 @@ class ConverterTest extends TestCase {
 		$this->destroy_mock_image( $converter->abs_source );
 	}
 
+	public function test_convert_fails_if_filetype_is_not_jpg_or_png_and_returns_WP_error() {
+		$converter = Mockery::mock( Converter::class )->makePartial();
+		$converter->shouldAllowMockingProtectedMethods();
+
+		$converter->abs_source = __DIR__ . '/sample.gif';
+		$converter->abs_dest   = __DIR__ . '/sample.webp';
+		$converter->rel_dest   = str_replace( __DIR__, 'https://example.com/wp-content/uploads/2024/01', $converter->abs_dest );
+
+		// Create Mock Files.
+		$this->create_mock_file( $converter->abs_source );
+
+		$converter->shouldReceive( 'set_image_source' )
+			->once()->with();
+
+		$converter->shouldReceive( 'set_image_destination' )
+			->once()->with();
+
+		WP_Mock::userFunction( 'wp_check_filetype' )
+			->once()
+			->with( __DIR__ . '/sample.gif' )
+			->andReturn(
+				[
+					'type' => 'image/gif',
+				]
+			);
+
+		WP_Mock::userFunction( '__' )
+			->once()
+			->with( 'Error: Invalid file type.', 'image-converter-webp' )
+			->andReturn( 'Error: Invalid file type.' );
+
+		$mock = Mockery::mock( WP_Error::class );
+
+		$webp = $converter->convert();
+
+		$this->assertInstanceOf( 'WP_Error', $webp );
+		$this->assertConditionsMet();
+
+		// Destroy Mock Files.
+		$this->destroy_mock_image( $converter->abs_source );
+	}
+
 	public function test_convert_returns_same_if_destination_image_exists() {
 		$converter = Mockery::mock( Converter::class )->makePartial();
 		$converter->shouldAllowMockingProtectedMethods();

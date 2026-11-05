@@ -46,6 +46,14 @@ class Logger extends Service implements Kernel {
 		}
 
 		if ( is_wp_error( $webp ) ) {
+			$error_code = $webp->get_error_code( $webp );
+
+			// Bail out early for non-allowed images
+			if( $error_code === 'webp-img-invalid-type' ){
+				return;
+			}
+
+			// Only log errors that are not 'webp-img-invalid-type' which is JPEG/PNG
 			wp_insert_post(
 				[
 					'post_type'    => 'icfw_error',
