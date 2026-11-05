@@ -2,6 +2,7 @@
 
 ## 1.7.0
 * Fix: Set the default quality to 20 when no value is explicitly set in the plugin options.
+* Fix: Ensure correct saved option settings are passed to `WebPConvert` class.
 
 ## 1.6.0
 * Feat: Add `More Plugins` options page.

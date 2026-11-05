@@ -34,12 +34,19 @@ class ConverterTest extends TestCase {
 		$converter = Mockery::mock( Converter::class )->makePartial();
 		$converter->shouldAllowMockingProtectedMethods();
 
+		WP_Mock::userFunction( 'get_option' )
+			->once()
+			->with( 'icfw', [] )
+			->andReturn(
+				[
+					'quality' => 0,
+				]
+			);
+
 		WP_Mock::expectFilter(
 			'icfw_options',
 			[
-				'quality'     => 20,
-				'max-quality' => 100,
-				'converter'   => 'gd',
+				'quality' => 0,
 			]
 		);
 
@@ -49,11 +56,6 @@ class ConverterTest extends TestCase {
 					return array_merge( $defaults, $args );
 				}
 			);
-
-		WP_Mock::userFunction( 'get_option' )
-			->once()
-			->with( 'icfw', [] )
-			->andReturn( [ 'quality' => 0 ] );
 
 		$options = $converter->get_options();
 
@@ -72,42 +74,6 @@ class ConverterTest extends TestCase {
 		$converter = Mockery::mock( Converter::class )->makePartial();
 		$converter->shouldAllowMockingProtectedMethods();
 
-		WP_Mock::onFilter( 'icfw_options' )
-			->with(
-				[
-					'quality'     => 75,
-					'max-quality' => 100,
-					'converter'   => 'imagick',
-				]
-			)
-			->reply(
-				[
-					'quality'   => 50,
-					'converter' => 'imagick',
-				]
-			);
-
-		WP_Mock::userFunction( 'wp_parse_args' )
-			->once()
-			->with(
-				[
-					'quality'   => 75,
-					'converter' => 'imagick',
-				],
-				[
-					'quality'     => 20,
-					'max-quality' => 100,
-					'converter'   => 'gd',
-				]
-			)
-			->andReturn(
-				[
-					'quality'     => 75,
-					'max-quality' => 100,
-					'converter'   => 'imagick',
-				]
-			);
-
 		WP_Mock::userFunction( 'get_option' )
 			->once()
 			->with( 'icfw', [] )
@@ -118,13 +84,35 @@ class ConverterTest extends TestCase {
 				]
 			);
 
+		WP_Mock::onFilter( 'icfw_options' )
+			->with(
+				[
+					'quality'   => 75,
+					'converter' => 'imagick',
+				]
+			)
+			->reply(
+				[
+					'quality'   => 50,
+					'converter' => 'cwebp',
+				]
+			);
+
+		WP_Mock::userFunction( 'wp_parse_args' )
+			->andReturnUsing(
+				function ( $args, $defaults ) {
+					return array_merge( $defaults, $args );
+				}
+			);
+
 		$options = $converter->get_options();
 
 		$this->assertSame(
 			$options,
 			[
-				'quality'   => 50,
-				'converter' => 'imagick',
+				'quality'     => 50,
+				'max-quality' => 100,
+				'converter'   => 'cwebp',
 			]
 		);
 		$this->assertConditionsMet();
@@ -134,36 +122,6 @@ class ConverterTest extends TestCase {
 		$converter = Mockery::mock( Converter::class )->makePartial();
 		$converter->shouldAllowMockingProtectedMethods();
 
-		WP_Mock::expectFilter(
-			'icfw_options',
-			[
-				'quality'     => 66,
-				'max-quality' => 100,
-				'converter'   => 'cwebp',
-			]
-		);
-
-		WP_Mock::userFunction( 'wp_parse_args' )
-			->once()
-			->with(
-				[
-					'quality'   => 66,
-					'converter' => 'cwebp',
-				],
-				[
-					'quality'     => 20,
-					'max-quality' => 100,
-					'converter'   => 'gd',
-				]
-			)
-			->andReturn(
-				[
-					'quality'     => 66,
-					'max-quality' => 100,
-					'converter'   => 'cwebp',
-				]
-			);
-
 		WP_Mock::userFunction( 'get_option' )
 			->once()
 			->with( 'icfw', [] )
@@ -172,6 +130,21 @@ class ConverterTest extends TestCase {
 					'quality'   => 66,
 					'converter' => 'cwebp',
 				]
+			);
+
+		WP_Mock::expectFilter(
+			'icfw_options',
+			[
+				'quality'   => 66,
+				'converter' => 'cwebp',
+			]
+		);
+
+		WP_Mock::userFunction( 'wp_parse_args' )
+			->andReturnUsing(
+				function ( $args, $defaults ) {
+					return array_merge( $defaults, $args );
+				}
 			);
 
 		$options = $converter->get_options();
@@ -200,6 +173,13 @@ class ConverterTest extends TestCase {
 				]
 			);
 
+		WP_Mock::expectFilter(
+			'icfw_options',
+			[
+				'max-quality' => 100,
+			]
+		);
+
 		WP_Mock::userFunction( 'wp_parse_args' )
 			->andReturnUsing(
 				function ( $args, $defaults ) {
@@ -207,27 +187,20 @@ class ConverterTest extends TestCase {
 				}
 			);
 
-		$expected_array = [
-			'quality'     => 20,
-			'max-quality' => 100,
-			'converter'   => 'gd',
-		];
-
-		WP_Mock::expectFilter(
-			'icfw_options',
-			$expected_array
-		);
-
 		$options = $converter->get_options();
 
 		$this->assertSame(
 			$options,
-			$expected_array
+			[
+				'quality'     => 20,
+				'max-quality' => 100,
+				'converter'   => 'gd',
+			]
 		);
 		$this->assertConditionsMet();
 	}
 
-	public function test_get_options_returns_back_options_with_quality_set_when_quality_is_set_to_empty_string() {
+	public function test_get_options_returns_options_that_are_not_empty_strings() {
 		$converter = Mockery::mock( Converter::class )->makePartial();
 		$converter->shouldAllowMockingProtectedMethods();
 
@@ -236,9 +209,20 @@ class ConverterTest extends TestCase {
 			->with( 'icfw', [] )
 			->andReturn(
 				[
-					'quality' => '',
+					'quality'     => '',
+					'max-quality' => '',
+					'converter'   => '',
 				]
 			);
+
+		WP_Mock::expectFilter(
+			'icfw_options',
+			[
+				'quality'     => '',
+				'max-quality' => '',
+				'converter'   => '',
+			]
+		);
 
 		WP_Mock::userFunction( 'wp_parse_args' )
 			->andReturnUsing(
@@ -247,23 +231,57 @@ class ConverterTest extends TestCase {
 				}
 			);
 
-		$expected_array = [
-			'quality'     => 20,
-			'max-quality' => 100,
-			'converter'   => 'gd',
+		$options = $converter->get_options();
+
+		$this->assertSame(
+			$options,
+			[
+				'quality'     => 20,
+				'max-quality' => 100,
+				'converter'   => 'gd',
+			]
+		);
+		$this->assertConditionsMet();
+	}
+
+	public function test_get_options_returns_back_only_options_needed_by_webp_converter_class() {
+		$converter = Mockery::mock( Converter::class )->makePartial();
+		$converter->shouldAllowMockingProtectedMethods();
+
+		$options = [
+			'quality'   => '',
+			'converter' => 'unknown',
+			'log'       => '1',
+			'page_load' => '1',
+			'age'       => 35,
 		];
 
-		WP_Mock::expectFilter(
-			'icfw_options',
-			$expected_array
-		);
+		WP_Mock::userFunction( 'get_option' )
+			->once()
+			->with( 'icfw', [] )
+			->andReturn( $options );
+
+		WP_Mock::expectFilter( 'icfw_options', $options );
+
+		WP_Mock::userFunction( 'wp_parse_args' )
+			->andReturnUsing(
+				function ( $args, $defaults ) {
+					return array_merge( $defaults, $args );
+				}
+			);
 
 		$options = $converter->get_options();
 
 		$this->assertSame(
 			$options,
-			$expected_array
+			[
+				'quality'     => 20,
+				'max-quality' => 100,
+				'converter'   => 'gd',
+			]
 		);
+		$this->assertCount( 3, $options );
+
 		$this->assertConditionsMet();
 	}
 
