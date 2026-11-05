@@ -113,6 +113,14 @@ class Converter {
 			);
 		}
 
+		// Bail out, if image filetype isn't jpg, jpeg or png.
+		if ( ! in_array( explode( '/', (string) $filetype['type'] )[1], [ 'jpg', 'jpeg', 'png' ], true ) ) {
+			return new WP_Error(
+				'webp-img-invalid-type',
+				__( 'Error: Invalid image file type.', 'image-converter-webp' )
+			);
+		}
+
 		// Bail out, if dest. image exists.
 		if ( file_exists( $this->abs_dest ) ) {
 			return $webp;
