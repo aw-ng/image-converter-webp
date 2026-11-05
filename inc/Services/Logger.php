@@ -48,7 +48,7 @@ class Logger extends Service implements Kernel {
 		if ( is_wp_error( $webp ) ) {
 			$error_code = $webp->get_error_code();
 
-			// Bail out early for non-allowed images
+			// Bail out early for non-allowed images.
 			if ( 'webp-img-invalid-type' === $error_code ) {
 				return;
 			}
