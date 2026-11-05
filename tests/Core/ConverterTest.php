@@ -454,8 +454,8 @@ class ConverterTest extends TestCase {
 
 		WP_Mock::userFunction( '__' )
 			->once()
-			->with( 'Error: Invalid file type.', 'image-converter-webp' )
-			->andReturn( 'Error: Invalid file type.' );
+			->with( 'Error: Invalid image file type.', 'image-converter-webp' )
+			->andReturn( 'Error: Invalid image file type.' );
 
 		$mock = Mockery::mock( WP_Error::class );
 
