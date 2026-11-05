@@ -114,7 +114,7 @@ class Converter {
 		}
 
 		//Bail out, if filetype isn't jpg/png
-		if ( ! in_array( explode( '/', $filetype['type'] )[1], [ 'jpg', 'jpeg', 'png' ], true ) ) {
+		if ( ! in_array( explode( '/', (string) $filetype['type'] )[1], [ 'jpg', 'jpeg', 'png' ], true ) ) {
 			return new WP_Error(
 				'webp-img-invalid-type',
 				__( 'Error: Invalid file type.', 'image-converter-webp' )
