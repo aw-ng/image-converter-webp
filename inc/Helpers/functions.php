@@ -87,5 +87,5 @@ function icfw_get_equivalent( $url ): string {
  * @return string
  */
 function icfw_get_webp_path( $path ): string {
-	return preg_replace( '/\.[^.\/]+$/', '.webp', $path );
+	return (string) preg_replace( '/\.[^.\/]+$/', '.webp', $path );
 }
