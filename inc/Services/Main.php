@@ -114,8 +114,8 @@ class Main extends Service implements Kernel {
 
 		// Ensure image exists before proceeding.
 		if ( $main_image ) {
-			$extension  = '.' . pathinfo( $main_image, PATHINFO_EXTENSION );
-			$webp_image = str_replace( $extension, '.webp', $main_image );
+			//replace extension correctly
+			$webp_image = icfw_get_webp_path( $main_image );
 
 			if ( file_exists( $webp_image ) ) {
 				unlink( $webp_image );
@@ -145,8 +145,7 @@ class Main extends Service implements Kernel {
 			$metadata_image = trailingslashit( $img_url_prefix ) . ( $img['file'] ?? '' );
 
 			// Get WebP version of metadata image.
-			$metadata_extension  = '.' . pathinfo( $metadata_image, PATHINFO_EXTENSION );
-			$webp_metadata_image = str_replace( $metadata_extension, '.webp', $metadata_image );
+			$webp_metadata_image = icfw_get_webp_path( $metadata_image );
 
 			if ( file_exists( $webp_metadata_image ) ) {
 				unlink( $webp_metadata_image );

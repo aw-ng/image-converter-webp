@@ -21,6 +21,7 @@ use ImageConverterWebP\Core\Converter;
  * @covers icfw_get_settings
  * @covers icfw_get_equivalent
  * @covers icfw_get_abs_image
+ * @covers icfw_get_webp_path
  */
 class MainTest extends TestCase {
 	public Main $main;

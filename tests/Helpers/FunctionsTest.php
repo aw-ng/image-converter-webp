@@ -11,6 +11,7 @@ require_once __DIR__ . '/../../inc/Helpers/functions.php';
  * @covers icfw_get_settings
  * @covers icfw_get_equivalent
  * @covers icfw_get_abs_image
+ * @covers icfw_get_webp_path
  */
 class FunctionsTest extends TestCase {
 	public function test_icfw_get_settings() {
@@ -32,6 +33,12 @@ class FunctionsTest extends TestCase {
 		$webp = icfw_get_equivalent( 'https://www.example.com/wp-content/uploads/sample.jpeg' );
 
 		$this->assertSame( $webp, 'https://www.example.com/wp-content/uploads/sample.webp' );
+	}
+
+	public function test_icfw_get_webp_path() {
+		$path = icfw_get_webp_path( '/uploads/a.jpg-folder/a.jpg' );
+
+		$this->assertSame( $path, '/uploads/a.jpg-folder/a.webp' );
 	}
 
 	public function test_icfw_get_abs_image_returns_empty_string_if_not_image() {
