@@ -114,7 +114,6 @@ class Main extends Service implements Kernel {
 
 		// Ensure image exists before proceeding.
 		if ( $main_image ) {
-			//replace extension correctly
 			$webp_image = icfw_get_webp_path( $main_image );
 
 			if ( file_exists( $webp_image ) ) {
