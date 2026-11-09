@@ -23,7 +23,7 @@
     "phpunit/phpunit": "^9.6",
     "mockery/mockery": "^1.6",
     "10up/wp_mock": "^1.0",
-    "wp-coding-standards/wpcs": "^3.0",
+    "wp-coding-standards/wpcs": "^3.4.1",
     "dealerdirect/phpcodesniffer-composer-installer": "^1.0",
     "php-coveralls/php-coveralls": "^2.5",
     "phpunit/phpcov": "^8.2",
