@@ -61,7 +61,7 @@ function icfw_get_abs_image( $image_id ): string {
 }
 
 /**
- * Get WebP path
+ * Get WebP path.
  *
  * This function correctly replaces the extension of the image
  * to webp.
