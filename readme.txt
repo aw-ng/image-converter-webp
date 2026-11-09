@@ -74,6 +74,7 @@ Want to add your personal touch? All of our documentation can be found [here](ht
 * Fix: Set the default quality to 20 when no value is explicitly set in the plugin options.
 * Fix: Ensure correct saved option settings are passed to `WebPConvert` class.
 * Fix: Only allow image conversions for `image/jpeg` and `image/png` types.
+* Fix: Use `preg_replace` to correctly match and replace image extension with `webp`.
 
 = 1.6.0 =
 * Feat: Add `More Plugins` options page.

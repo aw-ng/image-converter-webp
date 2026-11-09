@@ -9,8 +9,8 @@ require_once __DIR__ . '/../../inc/Helpers/functions.php';
 
 /**
  * @covers icfw_get_settings
- * @covers icfw_get_equivalent
  * @covers icfw_get_abs_image
+ * @covers icfw_get_webp_path
  */
 class FunctionsTest extends TestCase {
 	public function test_icfw_get_settings() {
@@ -28,10 +28,10 @@ class FunctionsTest extends TestCase {
 		$this->assertTrue( $is_image_converted_on_upload );
 	}
 
-	public function test_icfw_get_equivalent() {
-		$webp = icfw_get_equivalent( 'https://www.example.com/wp-content/uploads/sample.jpeg' );
+	public function test_icfw_get_webp_path() {
+		$path = icfw_get_webp_path( '/uploads/a.jpg-folder/a.jpg' );
 
-		$this->assertSame( $webp, 'https://www.example.com/wp-content/uploads/sample.webp' );
+		$this->assertSame( $path, '/uploads/a.jpg-folder/a.webp' );
 	}
 
 	public function test_icfw_get_abs_image_returns_empty_string_if_not_image() {
