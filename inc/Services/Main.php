@@ -226,7 +226,7 @@ class Main extends Service implements Kernel {
 		// Get WebP image for thumbnail variation only.
 		foreach ( [ 'thumbnail' ] as $type ) {
 			$url                               = $metadata['sizes'][ $type ]['url'] ?? '';
-			$metadata['sizes'][ $type ]['url'] = icfw_get_equivalent( $url );
+			$metadata['sizes'][ $type ]['url'] = icfw_get_webp_path( $url );
 		}
 
 		return $metadata;
