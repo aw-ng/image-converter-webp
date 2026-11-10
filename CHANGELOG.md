@@ -6,6 +6,7 @@
 * Fix: Only allow image conversions for `image/jpeg` and `image/png` types.
 * Fix: Use `preg_replace` to correctly match and replace image extension with `webp`.
 * Fix: Update `wp-coding-standards/wpcs` package to address security vulnerability issues.
+* Fix: License correctly matched to `GPLv2` in `readme.txt` and `Main plugin file`.
 
 ## 1.6.0
 * Feat: Add `More Plugins` options page.
