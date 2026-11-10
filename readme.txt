@@ -75,7 +75,7 @@ Want to add your personal touch? All of our documentation can be found [here](ht
 * Fix: Ensure correct saved option settings are passed to `WebPConvert` class.
 * Fix: Only allow image conversions for `image/jpeg` and `image/png` types.
 * Fix: Use `preg_replace` to correctly match and replace image extension with `webp`.
-* Fix: Update `wpcs` package to address security issues.
+* Fix: Update `wp-coding-standards/wpcs` package to address security vulnerability issues.
 
 = 1.6.0 =
 * Feat: Add `More Plugins` options page.
