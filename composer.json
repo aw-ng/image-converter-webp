@@ -16,6 +16,7 @@
     }
   ],
   "require": {
+    "php": "^7.4 || ^8.0",
     "rosell-dk/webp-convert": "^2.9",
     "badasswp/pluginate": "^1.0"
   },
@@ -33,6 +34,9 @@
     "badasswp/wp-mock-tc": "^1.0"
   },
   "config": {
+    "platform": {
+      "php": "7.4.33"
+    },
     "allow-plugins": {
       "dealerdirect/phpcodesniffer-composer-installer": true,
       "phpstan/extension-installer": true
