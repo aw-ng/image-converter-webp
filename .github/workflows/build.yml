@@ -39,7 +39,6 @@ jobs:
             git rm -rf "$file"
           done < .deployignore
           git rm .deployignore
-          git clean -f composer.lock
 
       - name: Push to Master Built
         run: |
