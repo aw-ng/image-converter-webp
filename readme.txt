@@ -6,7 +6,7 @@ Tested up to: 7.0
 Stable tag: 1.6.0
 Requires PHP: 7.4
 License: GPLv2 or later
-License URI: http://www.gnu.org/licenses/gpl-2.0.html
+License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
 Convert your WordPress JPG and PNG images to efficient WebP format, improving performance, reducing file size, and enhancing website speed.
 
@@ -76,6 +76,7 @@ Want to add your personal touch? All of our documentation can be found [here](ht
 * Fix: Only allow image conversions for `image/jpeg` and `image/png` types.
 * Fix: Use `preg_replace` to correctly match and replace image extension with `webp`.
 * Fix: Update `wp-coding-standards/wpcs` package to address security vulnerability issues.
+* Fix: Update GPL License version number to `v2`.
 
 = 1.6.0 =
 * Feat: Add `More Plugins` options page.

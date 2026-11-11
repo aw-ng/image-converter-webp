@@ -7,7 +7,7 @@
  * Author:      badasswp
  * Author URI:  https://github.com/badasswp
  * License:     GPL v2 or later
- * License URI: https://www.gnu.org/licenses/gpl-3.0.html
+ * License URI: https://www.gnu.org/licenses/gpl-2.0.html
  * Text Domain: image-converter-webp
  * Domain Path: /languages
  *
