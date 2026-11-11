@@ -4,7 +4,7 @@
   "description": "Convert your WP images to WebP formats.",
   "author": "badasswp",
   "license": "GPL-2.0-or-later",
-  "homepage": "https://github.com/badasswp/image-converter-for-webp#readme",
+  "homepage": "https://github.com/aw-ng/image-converter-for-webp#readme",
   "scripts": {
     "start": "yarn boot && yarn wp-env start",
     "stop": "yarn wp-env stop",

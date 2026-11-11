@@ -7,6 +7,7 @@
 * Fix: Use `preg_replace` to correctly match and replace image extension with `webp`.
 * Fix: Update `wp-coding-standards/wpcs` package to address security vulnerability issues.
 * Fix: Update GPL License version number to `v2`.
+*Chore: Change link reference from ` https://github.com/badasswp/image-converter-webp` to `https://github.com/aw-ng/image-converter-webp`
 
 ## 1.6.0
 * Feat: Add `More Plugins` options page.
