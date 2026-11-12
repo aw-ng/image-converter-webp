@@ -30,7 +30,7 @@ function icfw_can_autoload(): bool {
 	if ( ! file_exists( ICFW_AUTOLOAD ) ) {
 		error_log(
 			sprintf(
-				esc_html__( 'Fatal Error: Composer not setup in %', 'image-converter-webp' ),
+				esc_html__( 'Fatal Error: Composer not setup in %s', 'image-converter-webp' ),
 				__DIR__
 			)
 		);
@@ -52,9 +52,12 @@ function icfw_can_autoload(): bool {
  */
 function icfw_autoload_notice(): void {
 	printf(
-		/* translators: plugin autoload file path. */
-		esc_html__( 'Fatal Error: %s file does not exist, please check if Composer is installed!', 'image-converter-webp' ),
-		esc_html( ICFW_AUTOLOAD )
+		/* translators: %s: plugin autoload file path. */
+		'<div class="notice notice-error"><p>%s</p></div>',
+		sprintf(
+			esc_html__( 'Fatal Error: %s file does not exist, please check if Composer is installed!', 'image-converter-webp' ),
+			esc_html( ICFW_AUTOLOAD )
+		)
 	);
 }
 
