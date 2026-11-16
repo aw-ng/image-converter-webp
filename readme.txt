@@ -77,6 +77,7 @@ Want to add your personal touch? All of our documentation can be found [here](ht
 * Fix: Use `preg_replace` to correctly match and replace image extension with `webp`.
 * Fix: Update `wp-coding-standards/wpcs` package to address security vulnerability issues.
 * Fix: Update GPL License version number to `v2`.
+* Chore: Update `README` link reference to `aw-ng`
 
 = 1.6.0 =
 * Feat: Add `More Plugins` options page.
