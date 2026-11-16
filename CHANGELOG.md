@@ -8,6 +8,7 @@
 * Fix: Update `wp-coding-standards/wpcs` package to address security vulnerability issues.
 * Fix: Update GPL License version number to `v2`.
 * Chore: Wrap `composer autoloader` error in WordPress standard notice markup.
+* Feat: Auto enable `page_load` and `upload` conversion for first time user.
 
 ## 1.6.0
 * Feat: Add `More Plugins` options page.

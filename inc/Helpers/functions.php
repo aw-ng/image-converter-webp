@@ -74,3 +74,25 @@ function icfw_get_abs_image( $image_id ): string {
 function icfw_get_webp_path( $path ): string {
 	return (string) preg_replace( '/\.[^.\/]+$/', '.webp', $path );
 }
+
+/**
+ * Activate Options for first time user
+ *
+ * This function correctly sets the `page_load` and `upload` option to `on`
+ * when the plugin is installed for the first time.
+ *
+ * @since 1.7.0
+ */
+function icfw_activate_options_for_first_time_user() {
+	$options = wp_parse_args(
+		get_option( 'icfw', [] ),
+		[
+			'upload'    => 'on',
+			'page_load' => 'on',
+		]
+	);
+
+	update_option( 'icfw', $options );
+
+	flush_rewrite_rules();
+}
