@@ -60,7 +60,7 @@ NB: The <strong>Convert Images on Page Load</strong> option helps you convert an
 
 The <strong>Image Converter for WebP</strong> plugin is built to work right out of the box. Simply install, activate, configure options and start using straight away.
 
-Want to add your personal touch? All of our documentation can be found [here](https://github.com/badasswp/image-converter-webp). You can override the plugin's behaviour with custom logic of your own using [hooks](https://github.com/badasswp/image-converter-webp?tab=readme-ov-file#hooks).
+Want to add your personal touch? All of our documentation can be found [here](https://github.com/aw-ng/image-converter-webp). You can override the plugin's behaviour with custom logic of your own using [hooks](https://github.com/aw-ng/image-converter-webp?tab=readme-ov-file#hooks).
 
 == Screenshots ==
 
@@ -202,4 +202,4 @@ Want to add your personal touch? All of our documentation can be found [here](ht
 
 == Contribute ==
 
-If you'd like to contribute to the development of this plugin, you can find it on [GitHub](https://github.com/badasswp/image-converter-webp).
+If you'd like to contribute to the development of this plugin, you can find it on [GitHub](https://github.com/aw-ng/image-converter-webp).

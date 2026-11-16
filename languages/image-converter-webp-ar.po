@@ -28,8 +28,8 @@ msgid "Image Converter for WebP"
 msgstr "محول الصور ل WebP"
 
 #. Plugin URI of the plugin/theme
-msgid "https://github.com/badasswp/image-converter-webp"
-msgstr "https://github.com/badasswp/image-converter-webp"
+msgid "https://github.com/aw-ng/image-converter-webp"
+msgstr "https://github.com/aw-ng/image-converter-webp"
 
 #. Author of the plugin/theme
 msgid "badasswp"
