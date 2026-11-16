@@ -8,6 +8,7 @@
 * Fix: Update `wp-coding-standards/wpcs` package to address security vulnerability issues.
 * Fix: Update GPL License version number to `v2`.
 * Chore: Update `README` link reference to `aw-ng`
+* Chore: Wrap `composer autoloader` error in WordPress standard notice markup.
 
 ## 1.6.0
 * Feat: Add `More Plugins` options page.
