@@ -82,6 +82,7 @@ function icfw_get_webp_path( $path ): string {
  * when the plugin is installed for the first time.
  *
  * @since 1.7.0
+ * @return void
  */
 function icfw_activate_options_for_first_time_user() {
 	$options = wp_parse_args(
