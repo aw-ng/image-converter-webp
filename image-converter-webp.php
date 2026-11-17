@@ -72,6 +72,7 @@ function icfw_run(): void {
 	if ( icfw_can_autoload() ) {
 		require_once __DIR__ . '/inc/Helpers/functions.php';
 		( \ImageConverterWebP\Plugin::get_instance() )->run();
+		register_activation_hook( __FILE__, 'icfw_activate_options_for_first_time_user' );
 	} else {
 		add_action( 'admin_notices', 'icfw_autoload_notice' );
 	}
