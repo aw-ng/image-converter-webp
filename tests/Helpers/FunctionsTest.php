@@ -172,7 +172,6 @@ class FunctionsTest extends TestCase {
 	}
 
 	public function test_icfw_activate_options_for_first_time_user_when_page_load_and_upload_are_set() {
-
 		WP_Mock::userFunction( 'get_option' )
 			->with( 'icfw', [] )
 			->andReturn(
