@@ -10,11 +10,11 @@ permissions:
 
 jobs:
   php74:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
 
     steps:
       - name: Checkout Repo
-        uses: actions/checkout@v2
+        uses: actions/checkout@v7
 
       - name: Set up PHP v7.4
         uses: shivammathur/setup-php@v2
@@ -35,13 +35,13 @@ jobs:
         run: composer run analyse
 
   php80:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
 
     needs: php74
 
     steps:
       - name: Checkout Repo
-        uses: actions/checkout@v2
+        uses: actions/checkout@v7
 
       - name: Set up PHP v8.0
         uses: shivammathur/setup-php@v2
@@ -62,13 +62,13 @@ jobs:
         run: composer run analyse
 
   php82:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
 
     needs: php80
 
     steps:
       - name: Checkout Repo
-        uses: actions/checkout@v2
+        uses: actions/checkout@v7
 
       - name: Set up PHP v8.2
         uses: shivammathur/setup-php@v2
