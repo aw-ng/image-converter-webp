@@ -91,13 +91,6 @@ class FunctionsTest extends TestCase {
 			->with( 'page_load' )
 			->andReturn( [ 'page_load' => 'on' ] );
 
-		WP_Mock::userFunction( 'wp_parse_args' )
-			->andReturnUsing(
-				function ( $args, $defaults ) {
-					return array_merge( $defaults, $args );
-				}
-			);
-
 		WP_Mock::userFunction( 'update_option' )
 			->once()
 			->with(
@@ -129,13 +122,6 @@ class FunctionsTest extends TestCase {
 			->with( 'upload' )
 			->andReturn( [ 'upload' => 'on' ] );
 
-		WP_Mock::userFunction( 'wp_parse_args' )
-			->andReturnUsing(
-				function ( $args, $defaults ) {
-					return array_merge( $defaults, $args );
-				}
-			);
-
 		WP_Mock::userFunction( 'update_option' )
 			->once()
 			->with(
@@ -166,13 +152,6 @@ class FunctionsTest extends TestCase {
 		WP_Mock::userFunction( 'icfw_get_settings' )
 			->with( 'upload' )
 			->andReturn( [ 'upload' => '' ] );
-
-		WP_Mock::userFunction( 'wp_parse_args' )
-			->andReturnUsing(
-				function ( $args, $defaults ) {
-					return array_merge( $defaults, $args );
-				}
-			);
 
 		WP_Mock::userFunction( 'update_option' )
 			->once()
@@ -209,13 +188,6 @@ class FunctionsTest extends TestCase {
 		WP_Mock::userFunction( 'icfw_get_settings' )
 			->with( 'upload' )
 			->andReturn( [ 'upload' => 'on' ] );
-
-		WP_Mock::userFunction( 'wp_parse_args' )
-			->andReturnUsing(
-				function ( $args, $defaults ) {
-					return array_merge( $defaults, $args );
-				}
-			);
 
 		WP_Mock::userFunction( 'update_option' )
 			->once()
