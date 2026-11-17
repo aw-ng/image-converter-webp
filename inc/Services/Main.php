@@ -50,7 +50,7 @@ class Main extends Service implements Kernel {
 
 		// Ensure this is allowed.
 		if ( icfw_get_settings( 'upload' ) ) {
-			$webp = $this->converter->convert();
+			$this->converter->convert();
 		}
 	}
 

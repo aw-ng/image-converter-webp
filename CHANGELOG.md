@@ -13,6 +13,7 @@
 * Chore: Update the Actions workflow to use supported `Ubuntu runner` and `Node.js versions`.
 * Chore: Remove pointless null coalescing on `get_post_meta()` calls.
 * Chore: Move assignment out of `do_action()` arguments.
+* Chore: Remove unused `$webp` variable in `Main.php` and `MetaData.php` file.
 
 ## 1.6.0
 * Feat: Add `More Plugins` options page.
