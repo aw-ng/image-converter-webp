@@ -9,9 +9,9 @@
 * Fix: Update GPL License version number to `v2`.
 * Chore: Update `badasswp` references to `aw-ng`.
 * Chore: Wrap `composer autoloader` error in WordPress standard notice markup.
-* Chore: Removed pointless null coalescing on `get_post_meta()` calls.
 * Feat: Auto enable `page_load` and `upload` conversion for first time users.
 * Chore: Update the Actions workflow to use supported `Ubuntu runner` and `Node.js versions`.
+* Chore: Removed pointless null coalescing on `get_post_meta()` calls.
 
 ## 1.6.0
 * Feat: Add `More Plugins` options page.
