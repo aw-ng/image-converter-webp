@@ -89,11 +89,11 @@ function icfw_activate_options_for_first_time_user() {
 	$options = get_option( 'icfw', [] );
 
 	if ( empty( icfw_get_settings( 'upload' ) ) ) {
-		$options["upload"] = "on" ;
+		$options['upload'] = 'on';
 	}
 
 	if ( empty( icfw_get_settings( 'page_load' ) ) ) {
-		$options["page_load"] = "on" ;
+		$options['page_load'] = 'on';
 	}
 
 	update_option( 'icfw', $options );
