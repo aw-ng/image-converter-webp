@@ -9,6 +9,7 @@
 * Fix: Update GPL License version number to `v2`.
 * Chore: Update `badasswp` references to `aw-ng`.
 * Chore: Wrap `composer autoloader` error in WordPress standard notice markup.
+* Chore: Update the `GitHub Actions workflow` files to use current, supported `Ubuntu runner` and `Node.js versions`.
 * Feat: Auto enable `page_load` and `upload` conversion for first time users.
 
 ## 1.6.0
