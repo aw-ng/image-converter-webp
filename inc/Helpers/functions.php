@@ -82,17 +82,19 @@ function icfw_get_webp_path( $path ): string {
  * when the plugin is installed for the first time.
  *
  * @since 1.7.0
- * 
+ *
  * @return void
  */
 function icfw_activate_options_for_first_time_user() {
-	$options = wp_parse_args(
-		get_option( 'icfw', [] ),
-		[
-			'upload'    => 'on',
-			'page_load' => 'on',
-		]
-	);
+	$options = get_option( 'icfw', [] );
+
+	if ( empty( icfw_get_settings( 'upload' ) ) ) {
+		$options = wp_parse_args( $options, [ 'upload' => 'on' ] );
+	}
+
+	if ( empty( icfw_get_settings( 'page_load' ) ) ) {
+		$options = wp_parse_args( $options, [ 'page_load' => 'on' ] );
+	}
 
 	update_option( 'icfw', $options );
 
