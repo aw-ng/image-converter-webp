@@ -11,7 +11,7 @@ permissions:
 jobs:
   release:
     if: startsWith(github.ref_name, 'release-')
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
 
     steps:
       - name: Confirm branch
@@ -19,7 +19,7 @@ jobs:
           echo "Release workflow triggered on branch: ${{ github.ref_name }}"
 
       - name: Checkout release branch
-        uses: actions/checkout@v4
+        uses: actions/checkout@v7
         with:
           ref: ${{ github.ref_name }}
 
