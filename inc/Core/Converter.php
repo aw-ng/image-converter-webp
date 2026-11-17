@@ -153,6 +153,23 @@ class Converter {
 		 * @return void
 		 */
 		$attachment_id = $this->service->source['id'];
+		}
+
+		// Set Attachment ID.
+		$attachment_id = $this->service->source['id'];
+
+		/**
+		 * Fires after Image is converted.
+		 *
+		 * @since 1.0.1
+		 * @since 1.1.0 Moved to Converter.
+		 * @since 1.1.1 Rename hook to use `icfw` prefix.
+		 *
+		 * @param string|\WP_Error $webp          WebP Image URL or WP Error.
+		 * @param int              $attachment_id Image ID.
+		 *
+		 * @return void
+		 */
 		do_action( 'icfw_convert', $webp, $attachment_id );
 
 		return $webp;
