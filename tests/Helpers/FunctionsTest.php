@@ -83,14 +83,6 @@ class FunctionsTest extends TestCase {
 			->with( 'icfw', [] )
 			->andReturn( [ 'page_load' => 'on' ] );
 
-		WP_Mock::userFunction( 'icfw_get_settings' )
-			->with( 'upload' )
-			->andReturn( [ 'upload' => '' ] );
-
-		WP_Mock::userFunction( 'icfw_get_settings' )
-			->with( 'page_load' )
-			->andReturn( [ 'page_load' => 'on' ] );
-
 		WP_Mock::userFunction( 'update_option' )
 			->once()
 			->with(
@@ -112,14 +104,6 @@ class FunctionsTest extends TestCase {
 	public function test_icfw_activate_options_for_first_time_user_when_page_load_is_not_set() {
 		WP_Mock::userFunction( 'get_option' )
 			->with( 'icfw', [] )
-			->andReturn( [ 'upload' => 'on' ] );
-
-		WP_Mock::userFunction( 'icfw_get_settings' )
-			->with( 'page_load' )
-			->andReturn( [ 'page_load' => '' ] );
-
-		WP_Mock::userFunction( 'icfw_get_settings' )
-			->with( 'upload' )
 			->andReturn( [ 'upload' => 'on' ] );
 
 		WP_Mock::userFunction( 'update_option' )
@@ -144,14 +128,6 @@ class FunctionsTest extends TestCase {
 		WP_Mock::userFunction( 'get_option' )
 			->with( 'icfw', [] )
 			->andReturn( [] );
-
-		WP_Mock::userFunction( 'icfw_get_settings' )
-			->with( 'page_load' )
-			->andReturn( [ 'page_load' => '' ] );
-
-		WP_Mock::userFunction( 'icfw_get_settings' )
-			->with( 'upload' )
-			->andReturn( [ 'upload' => '' ] );
 
 		WP_Mock::userFunction( 'update_option' )
 			->once()
@@ -181,14 +157,6 @@ class FunctionsTest extends TestCase {
 				]
 			);
 
-		WP_Mock::userFunction( 'icfw_get_settings' )
-			->with( 'page_load' )
-			->andReturn( [ 'page_load' => 'on' ] );
-
-		WP_Mock::userFunction( 'icfw_get_settings' )
-			->with( 'upload' )
-			->andReturn( [ 'upload' => 'on' ] );
-
 		WP_Mock::userFunction( 'update_option' )
 			->once()
 			->with(
@@ -216,14 +184,6 @@ class FunctionsTest extends TestCase {
 					'upload'    => '',
 				]
 			);
-
-		WP_Mock::userFunction( 'icfw_get_settings' )
-			->with( 'page_load' )
-			->andReturn( [ 'page_load' => 'on' ] );
-
-		WP_Mock::userFunction( 'icfw_get_settings' )
-			->with( 'upload' )
-			->andReturn( [ 'upload' => 'on' ] );
 
 		WP_Mock::userFunction( 'update_option' )
 			->once()
