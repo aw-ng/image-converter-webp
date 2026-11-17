@@ -1,13 +1,13 @@
 <?php
 /**
  * Plugin Name: Image Converter for WebP
- * Plugin URI:  https://github.com/badasswp/image-converter-webp
+ * Plugin URI:  https://github.com/aw-ng/image-converter-webp
  * Description: Convert your WordPress JPG/PNG images to WebP formats during runtime.
  * Version:     1.6.0
  * Author:      badasswp
  * Author URI:  https://github.com/badasswp
  * License:     GPL v2 or later
- * License URI: https://www.gnu.org/licenses/gpl-3.0.html
+ * License URI: https://www.gnu.org/licenses/gpl-2.0.html
  * Text Domain: image-converter-webp
  * Domain Path: /languages
  *
@@ -30,7 +30,8 @@ function icfw_can_autoload(): bool {
 	if ( ! file_exists( ICFW_AUTOLOAD ) ) {
 		error_log(
 			sprintf(
-				esc_html__( 'Fatal Error: Composer not setup in %', 'image-converter-webp' ),
+				/* translators: %s: plugin autoload file path. */
+				esc_html__( 'Fatal Error: Composer not setup in %s', 'image-converter-webp' ),
 				__DIR__
 			)
 		);
@@ -52,9 +53,13 @@ function icfw_can_autoload(): bool {
  */
 function icfw_autoload_notice(): void {
 	printf(
-		/* translators: plugin autoload file path. */
-		esc_html__( 'Fatal Error: %s file does not exist, please check if Composer is installed!', 'image-converter-webp' ),
-		esc_html( ICFW_AUTOLOAD )
+		/* translators: %s: plugin autoload file path. */
+		'<div class="notice notice-error"><p>%s</p></div>',
+		sprintf(
+			/* translators: %s: plugin autoload file path. */
+			esc_html__( 'Fatal Error: %s file does not exist, please check if Composer is installed!', 'image-converter-webp' ),
+			esc_html( ICFW_AUTOLOAD )
+		)
 	);
 }
 
@@ -67,6 +72,7 @@ function icfw_run(): void {
 	if ( icfw_can_autoload() ) {
 		require_once __DIR__ . '/inc/Helpers/functions.php';
 		( \ImageConverterWebP\Plugin::get_instance() )->run();
+		register_activation_hook( __FILE__, 'icfw_activate_options_for_first_time_user' );
 	} else {
 		add_action( 'admin_notices', 'icfw_autoload_notice' );
 	}

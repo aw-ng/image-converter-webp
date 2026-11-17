@@ -9,8 +9,9 @@ require_once __DIR__ . '/../../inc/Helpers/functions.php';
 
 /**
  * @covers icfw_get_settings
- * @covers icfw_get_equivalent
  * @covers icfw_get_abs_image
+ * @covers icfw_get_webp_path
+ * @covers icfw_activate_options_for_first_time_user
  */
 class FunctionsTest extends TestCase {
 	public function test_icfw_get_settings() {
@@ -28,10 +29,10 @@ class FunctionsTest extends TestCase {
 		$this->assertTrue( $is_image_converted_on_upload );
 	}
 
-	public function test_icfw_get_equivalent() {
-		$webp = icfw_get_equivalent( 'https://www.example.com/wp-content/uploads/sample.jpeg' );
+	public function test_icfw_get_webp_path() {
+		$path = icfw_get_webp_path( '/uploads/a.jpg-folder/a.jpg' );
 
-		$this->assertSame( $webp, 'https://www.example.com/wp-content/uploads/sample.webp' );
+		$this->assertSame( $path, '/uploads/a.jpg-folder/a.webp' );
 	}
 
 	public function test_icfw_get_abs_image_returns_empty_string_if_not_image() {
@@ -75,6 +76,131 @@ class FunctionsTest extends TestCase {
 		$this->assertSame( $webp, __DIR__ . '/sample.webp' );
 
 		$this->destroy_mock_image( __DIR__ . '/sample.webp' );
+	}
+
+	public function test_icfw_activate_options_for_first_time_user_when_upload_is_not_set() {
+		WP_Mock::userFunction( 'get_option' )
+			->with( 'icfw', [] )
+			->andReturn( [ 'page_load' => 'on' ] );
+
+		WP_Mock::userFunction( 'update_option' )
+			->once()
+			->with(
+				'icfw',
+				[
+					'page_load' => 'on',
+					'upload'    => 'on',
+				]
+			);
+
+		WP_Mock::userFunction( 'flush_rewrite_rules' )
+			->once();
+
+		icfw_activate_options_for_first_time_user();
+
+		$this->assertConditionsMet();
+	}
+
+	public function test_icfw_activate_options_for_first_time_user_when_page_load_is_not_set() {
+		WP_Mock::userFunction( 'get_option' )
+			->with( 'icfw', [] )
+			->andReturn( [ 'upload' => 'on' ] );
+
+		WP_Mock::userFunction( 'update_option' )
+			->once()
+			->with(
+				'icfw',
+				[
+					'page_load' => 'on',
+					'upload'    => 'on',
+				]
+			);
+
+		WP_Mock::userFunction( 'flush_rewrite_rules' )
+			->once();
+
+		icfw_activate_options_for_first_time_user();
+
+		$this->assertConditionsMet();
+	}
+
+	public function test_icfw_activate_options_for_first_time_user_when_page_load_and_upload_are_not_set() {
+		WP_Mock::userFunction( 'get_option' )
+			->with( 'icfw', [] )
+			->andReturn( [] );
+
+		WP_Mock::userFunction( 'update_option' )
+			->once()
+			->with(
+				'icfw',
+				[
+					'page_load' => 'on',
+					'upload'    => 'on',
+				]
+			);
+
+		WP_Mock::userFunction( 'flush_rewrite_rules' )
+			->once();
+
+		icfw_activate_options_for_first_time_user();
+
+		$this->assertConditionsMet();
+	}
+
+	public function test_icfw_activate_options_for_first_time_user_when_page_load_and_upload_are_set() {
+		WP_Mock::userFunction( 'get_option' )
+			->with( 'icfw', [] )
+			->andReturn(
+				[
+					'page_load' => 'on',
+					'upload'    => 'on',
+				]
+			);
+
+		WP_Mock::userFunction( 'update_option' )
+			->once()
+			->with(
+				'icfw',
+				[
+					'page_load' => 'on',
+					'upload'    => 'on',
+				]
+			);
+
+		WP_Mock::userFunction( 'flush_rewrite_rules' )
+			->once();
+
+		icfw_activate_options_for_first_time_user();
+
+		$this->assertConditionsMet();
+	}
+
+	public function test_icfw_activate_options_for_first_time_user_when_page_load_and_upload_are_set_to_empty_string() {
+		WP_Mock::userFunction( 'get_option' )
+			->with( 'icfw', [] )
+			->andReturn(
+				[
+					'page_load' => '',
+					'upload'    => '',
+				]
+			);
+
+		WP_Mock::userFunction( 'update_option' )
+			->once()
+			->with(
+				'icfw',
+				[
+					'page_load' => 'on',
+					'upload'    => 'on',
+				]
+			);
+
+		WP_Mock::userFunction( 'flush_rewrite_rules' )
+			->once();
+
+		icfw_activate_options_for_first_time_user();
+
+		$this->assertConditionsMet();
 	}
 
 	public function create_mock_image( $image_file_name ) {

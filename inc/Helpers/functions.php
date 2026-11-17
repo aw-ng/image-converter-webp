@@ -50,11 +50,7 @@ function icfw_get_abs_image( $image_id ): string {
 	$wp_abs_image = (string) get_attached_file( $image_id );
 
 	// Get WebP absolute image.
-	$webp_abs_image = str_replace(
-		sprintf( '.%s', pathinfo( $wp_abs_image, PATHINFO_EXTENSION ) ),
-		'.webp',
-		$wp_abs_image
-	);
+	$webp_abs_image = icfw_get_webp_path( $wp_abs_image );
 
 	// Bail out, if it does not exist.
 	if ( ! file_exists( $webp_abs_image ) ) {
@@ -65,20 +61,42 @@ function icfw_get_abs_image( $image_id ): string {
 }
 
 /**
- * Get WebP equivalent image.
+ * Get WebP path.
  *
- * This function gets the relative image of the
- * WebP image.
+ * This function correctly replaces the extension of the image
+ * to `webp`.
  *
- * @since 1.2.0
+ * @since 1.7.0
  *
- * @param string $url Relative URL.
+ * @param string $path Image path.
  * @return string
  */
-function icfw_get_equivalent( $url ): string {
-	return str_replace(
-		sprintf( '.%s', pathinfo( $url, PATHINFO_EXTENSION ) ),
-		'.webp',
-		$url
-	);
+function icfw_get_webp_path( $path ): string {
+	return (string) preg_replace( '/\.[^.\/]+$/', '.webp', $path );
+}
+
+/**
+ * Activate Options for first time user
+ *
+ * This function correctly sets the `page_load` and `upload` option to `on`
+ * when the plugin is installed for the first time.
+ *
+ * @since 1.7.0
+ *
+ * @return void
+ */
+function icfw_activate_options_for_first_time_user() {
+	$options = get_option( 'icfw', [] );
+
+	if ( empty( icfw_get_settings( 'upload' ) ) ) {
+		$options['upload'] = 'on';
+	}
+
+	if ( empty( icfw_get_settings( 'page_load' ) ) ) {
+		$options['page_load'] = 'on';
+	}
+
+	update_option( 'icfw', $options );
+
+	flush_rewrite_rules();
 }

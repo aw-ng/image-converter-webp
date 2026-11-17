@@ -167,7 +167,7 @@ class PageLoad extends Service implements Kernel {
 
 			// Generate the main WebP image for non-webp images.
 			if ( $src && ( pathinfo( $src, PATHINFO_EXTENSION ) !== 'webp' ) ) {
-				$html = str_replace( $src, $this->get_webp( $src, $id ), $html );
+				$html = icfw_get_webp_path( $html );
 			}
 
 			// Generate WebP images for srcset variations.

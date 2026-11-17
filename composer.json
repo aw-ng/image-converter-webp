@@ -16,6 +16,7 @@
     }
   ],
   "require": {
+    "php": "^7.4 || ^8.0",
     "rosell-dk/webp-convert": "^2.9",
     "badasswp/pluginate": "^1.0"
   },
@@ -23,7 +24,7 @@
     "phpunit/phpunit": "^9.6",
     "mockery/mockery": "^1.6",
     "10up/wp_mock": "^1.0",
-    "wp-coding-standards/wpcs": "^3.0",
+    "wp-coding-standards/wpcs": "^3.4.1",
     "dealerdirect/phpcodesniffer-composer-installer": "^1.0",
     "php-coveralls/php-coveralls": "^2.5",
     "phpunit/phpcov": "^8.2",
@@ -33,6 +34,9 @@
     "badasswp/wp-mock-tc": "^1.0"
   },
   "config": {
+    "platform": {
+      "php": "7.4.33"
+    },
     "allow-plugins": {
       "dealerdirect/phpcodesniffer-composer-installer": true,
       "phpstan/extension-installer": true

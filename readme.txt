@@ -6,7 +6,7 @@ Tested up to: 7.0
 Stable tag: 1.6.0
 Requires PHP: 7.4
 License: GPLv2 or later
-License URI: http://www.gnu.org/licenses/gpl-2.0.html
+License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
 Convert your WordPress JPG and PNG images to efficient WebP format, improving performance, reducing file size, and enhancing website speed.
 
@@ -60,7 +60,7 @@ NB: The <strong>Convert Images on Page Load</strong> option helps you convert an
 
 The <strong>Image Converter for WebP</strong> plugin is built to work right out of the box. Simply install, activate, configure options and start using straight away.
 
-Want to add your personal touch? All of our documentation can be found [here](https://github.com/badasswp/image-converter-webp). You can override the plugin's behaviour with custom logic of your own using [hooks](https://github.com/badasswp/image-converter-webp?tab=readme-ov-file#hooks).
+Want to add your personal touch? All of our documentation can be found [here](https://github.com/aw-ng/image-converter-webp). You can override the plugin's behaviour with custom logic of your own using [hooks](https://github.com/aw-ng/image-converter-webp?tab=readme-ov-file#hooks).
 
 == Screenshots ==
 
@@ -69,6 +69,17 @@ Want to add your personal touch? All of our documentation can be found [here](ht
 3. Attachment Modal - See Converted WebP image path here.
 
 == Changelog ==
+
+= 1.7.0 =
+* Fix: Set the default quality to 20 when no value is explicitly set in the plugin options.
+* Fix: Ensure correct saved option settings are passed to `WebPConvert` class.
+* Fix: Only allow image conversions for `image/jpeg` and `image/png` types.
+* Fix: Use `preg_replace` to correctly match and replace image extension with `webp`.
+* Fix: Update `wp-coding-standards/wpcs` package to address security vulnerability issues.
+* Fix: Update GPL License version number to `v2`.
+* Chore: Update `badasswp` references to `aw-ng`.
+* Chore: Wrap `composer autoloader` error in WordPress standard notice markup.
+* Feat: Auto enable `page_load` and `upload` conversion for first time users.
 
 = 1.6.0 =
 * Feat: Add `More Plugins` options page.
@@ -194,4 +205,4 @@ Want to add your personal touch? All of our documentation can be found [here](ht
 
 == Contribute ==
 
-If you'd like to contribute to the development of this plugin, you can find it on [GitHub](https://github.com/badasswp/image-converter-webp).
+If you'd like to contribute to the development of this plugin, you can find it on [GitHub](https://github.com/aw-ng/image-converter-webp).

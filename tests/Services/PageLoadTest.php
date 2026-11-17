@@ -20,6 +20,7 @@ use ImageConverterWebP\Services\PageLoad;
  * @covers \ImageConverterWebP\Services\PageLoad::get_webp
  * @covers \ImageConverterWebP\Services\PageLoad::get_all_srcset_images
  * @covers icfw_get_settings
+ * @covers icfw_get_webp_path
  */
 class PageLoadTest extends WPMockTestCase {
 	public array $source;

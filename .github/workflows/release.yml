@@ -70,7 +70,6 @@ jobs:
           fi
           git clean -f yarn.lock
           git clean -f node_modules
-          git clean -f composer.lock
 
       - name: Commit & push release-built branch
         run: |

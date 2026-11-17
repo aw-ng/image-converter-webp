@@ -113,6 +113,14 @@ class Converter {
 			);
 		}
 
+		// Bail out, if image filetype isn't jpg, jpeg or png.
+		if ( ! in_array( explode( '/', (string) $filetype['type'] )[1], [ 'jpg', 'jpeg', 'png' ], true ) ) {
+			return new WP_Error(
+				'webp-img-invalid-type',
+				__( 'Error: Invalid image file type.', 'image-converter-webp' )
+			);
+		}
+
 		// Bail out, if dest. image exists.
 		if ( file_exists( $this->abs_dest ) ) {
 			return $webp;
@@ -226,19 +234,7 @@ class Converter {
 	 * @return mixed[]
 	 */
 	protected function get_options(): array {
-		$settings = get_option( 'icfw', [] );
-
-		// Make sure this array key is integer.
-		$settings['quality'] = (int) ( $settings['quality'] ?? 0 );
-
-		$options = wp_parse_args(
-			$settings,
-			[
-				'quality'     => 20,
-				'max-quality' => 100,
-				'converter'   => 'gd',
-			]
-		);
+		$options = get_option( 'icfw', [] );
 
 		/**
 		 * Get Conversion options.
@@ -250,6 +246,54 @@ class Converter {
 		 * @param mixed[] $options Conversion options.
 		 * @return mixed[]
 		 */
-		return (array) apply_filters( 'icfw_options', $options );
+		$options = (array) apply_filters( 'icfw_options', $options );
+
+		// Default conversion options.
+		$default = [
+			'quality'     => 20,
+			'max-quality' => 100,
+			'converter'   => 'gd',
+		];
+
+		// Validate the converter option against the allowed engines.
+		if ( isset( $options['converter'] ) ) {
+			$options['converter'] =
+				in_array(
+					$options['converter'],
+					[ 'gd', 'cwebp', 'ffmpeg', 'imagick', 'gmagick' ],
+					true
+				)
+				? $options['converter']
+				: $default['converter'];
+		}
+
+		// Ensure the quality is a valid integer.
+		if ( isset( $options['quality'] ) ) {
+			$options['quality'] = (int) $options['quality'];
+
+			// Ensure the quality is set to a value greater than zero.
+			if ( ! $options['quality'] || ( $options['quality'] < 0 ) ) {
+				$options['quality'] = $default['quality'];
+			}
+		}
+
+		// Ensure the max-quality is a valid integer.
+		if ( isset( $options['max-quality'] ) ) {
+			$options['max-quality'] = (int) $options['max-quality'];
+
+			// Ensure the max-quality is set to a value greater than zero.
+			if ( ! $options['max-quality'] || ( $options['max-quality'] < 0 ) ) {
+				$options['max-quality'] = $default['max-quality'];
+			}
+		}
+
+		// Fallback to sensible default options.
+		$options = wp_parse_args( $options, $default );
+
+		return array_filter(
+			$options,
+			fn( $key ) => in_array( $key, array_keys( $default ), true ),
+			ARRAY_FILTER_USE_KEY
+		);
 	}
 }
