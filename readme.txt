@@ -82,6 +82,7 @@ Want to add your personal touch? All of our documentation can be found [here](ht
 * Feat: Auto enable `page_load` and `upload` conversion for first time users.
 * Chore: Update the Actions workflow to use supported `Ubuntu runner` and `Node.js versions`.
 * Chore: Remove pointless null coalescing on `get_post_meta()` calls.
+* Chore: Move assignment out of `do_action()` arguments.
 
 = 1.6.0 =
 * Feat: Add `More Plugins` options page.

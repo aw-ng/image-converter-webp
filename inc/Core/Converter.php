@@ -152,7 +152,8 @@ class Converter {
 		 *
 		 * @return void
 		 */
-		do_action( 'icfw_convert', $webp, $attachment_id = $this->service->source['id'] );
+		$attachment_id = $this->service->source['id'];
+		do_action( 'icfw_convert', $webp, $attachment_id );
 
 		return $webp;
 	}
