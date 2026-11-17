@@ -140,6 +140,9 @@ class Converter {
 			);
 		}
 
+		// Set Attachment ID.
+		$attachment_id = $this->service->source['id'];
+
 		/**
 		 * Fires after Image is converted.
 		 *
@@ -152,7 +155,7 @@ class Converter {
 		 *
 		 * @return void
 		 */
-		do_action( 'icfw_convert', $webp, $attachment_id = $this->service->source['id'] );
+		do_action( 'icfw_convert', $webp, $attachment_id );
 
 		return $webp;
 	}
