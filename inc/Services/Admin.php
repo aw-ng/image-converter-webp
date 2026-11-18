@@ -206,7 +206,5 @@ class Admin extends Service implements Kernel {
 			[],
 			ICFW_VERSION
 		);
-
-		error_log( print_r( plugins_url( 'styles.css', ICFW_FILE ), true ) );
 	}
 }
