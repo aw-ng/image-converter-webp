@@ -14,6 +14,8 @@ use ImageConverterWebP\Admin\Form;
 use ImageConverterWebP\Admin\Options;
 use ImageConverterWebP\Abstracts\Service;
 use ImageConverterWebP\Interfaces\Kernel;
+use const ImageConverterWebP\ICFW_FILE;
+use const ImageConverterWebP\ICFW_VERSION;
 
 use Pluginate\Admin as Pluginate;
 
@@ -206,5 +208,7 @@ class Admin extends Service implements Kernel {
 			[],
 			ICFW_VERSION
 		);
+
+		error_log( print_r( ICFW_FILE, true ) );
 	}
 }
