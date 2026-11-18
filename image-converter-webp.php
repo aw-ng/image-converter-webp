@@ -19,7 +19,7 @@ if ( ! defined( 'WPINC' ) ) {
 }
 
 define( 'ICFW_AUTOLOAD', __DIR__ . '/vendor/autoload.php' );
-define( 'ICFW_VERSION', '1.6.0' );
+define( 'ICFW_VERSION', '1.7.0' );
 define( 'ICFW_FILE', __FILE__ );
 
 /**
