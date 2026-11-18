@@ -185,16 +185,15 @@ class AdminTest extends WPMockTestCase {
 			->andReturn( $screen );
 
 		WP_Mock::userFunction( 'plugins_url' )
-			->with( 'image-converter-webp/styles.css' )
+			->with( 'styles.css', ICFW_FILE )
 			->andReturn( 'https://example.com/wp-content/plugins/image-converter-webp/styles.css' );
 
 		WP_Mock::userFunction( 'wp_enqueue_style' )
 			->with(
-				'image-converter-webp',
+				'icfw-styles',
 				'https://example.com/wp-content/plugins/image-converter-webp/styles.css',
 				[],
-				true,
-				'all'
+				ICFW_VERSION
 			)
 			->andReturn( null );
 
