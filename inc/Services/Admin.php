@@ -14,8 +14,6 @@ use ImageConverterWebP\Admin\Form;
 use ImageConverterWebP\Admin\Options;
 use ImageConverterWebP\Abstracts\Service;
 use ImageConverterWebP\Interfaces\Kernel;
-use ImageConverterWebP\ICFW_FILE;
-use ImageConverterWebP\ICFW_VERSION;
 
 use Pluginate\Admin as Pluginate;
 
