@@ -14,7 +14,7 @@
  * @package ImageConverterWebP
  */
 
-namespace ImageConverterWebP
+namespace ImageConverterWebP;
 
 if ( ! defined( 'WPINC' ) ) {
 	die;
