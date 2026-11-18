@@ -81,6 +81,6 @@ class MetaData extends Service implements Kernel {
 			'url' => $image_url,
 		];
 
-		$webp = $this->converter->convert();
+		$this->converter->convert();
 	}
 }
