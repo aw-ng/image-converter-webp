@@ -223,7 +223,6 @@ class Converter {
 		$this->rel_dest = apply_filters( 'icfw_image_rel_destination', $image_rel_dest, $rel_source_url, $image_extension );
 	}
 
-
 	/**
 	 * Get Options.
 	 *
