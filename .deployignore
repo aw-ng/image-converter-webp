@@ -6,6 +6,7 @@ CHANGELOG.md
 package.json
 phpcs.xml
 phpstan.neon
+phpstan-bootstrap.php
 phpunit.xml
 README.md
 assets
