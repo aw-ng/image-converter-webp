@@ -97,6 +97,5 @@ function icfw_activate_options_for_first_time_user() {
 	}
 
 	update_option( 'icfw', $options );
-
 	flush_rewrite_rules();
 }

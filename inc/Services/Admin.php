@@ -201,11 +201,10 @@ class Admin extends Service implements Kernel {
 		}
 
 		wp_enqueue_style(
-			Options::get_page_slug(),
-			plugins_url( 'image-converter-webp/styles.css' ),
+			'icfw-styles',
+			plugins_url( 'styles.css', ICFW_FILE ),
 			[],
-			true,
-			'all'
+			ICFW_VERSION
 		);
 	}
 }
