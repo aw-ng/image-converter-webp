@@ -77,7 +77,7 @@ jobs:
           git push origin "$BUILT_BRANCH" --force
 
       - name: Deploy to Staging
-        uses: SamKirkland/FTP-Deploy-Action@v4.3.6
+        uses: SamKirkland/FTP-Deploy-Action@v4.4.0
         with:
           server: ${{ secrets.FTP_HOST }}
           username: ${{ secrets.FTP_USERNAME }}
