@@ -154,8 +154,6 @@ class PageLoad extends Service implements Kernel {
 			return $html;
 		}
 
-		$html = wp_filter_content_tags( $html );
-
 		$dom = new DOMDocument();
 		$dom->loadHTML( $html, LIBXML_NOERROR );
 

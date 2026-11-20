@@ -220,11 +220,7 @@ class PageLoadTest extends WPMockTestCase {
 				]
 			);
 
-		WP_Mock::userFunction( 'wp_filter_content_tags' )
-			->with( '<figure class="wp-block-image size-large"><img src="https://example.com/wp-content/uploads/2025/12/image-799x1024.png" alt="" class="wp-image-1140"/></figure>' )
-			->andReturn( '<figure class="wp-block-image size-large"><img width="799" height="1024" src="https://example.com/wp-content/uploads/2025/12/image-799x1024.png" alt="" class="wp-image-1140" srcset="https://example.com/wp-content/uploads/2025/12/image-799x1024.png 799w, https://example.com/wp-content/uploads/2025/12/image-234x300.png 234w, https://example.com/wp-content/uploads/2025/12/image-768x985.png 768w, https://example.com/wp-content/uploads/2025/12/image.png 922w" sizes="(max-width: 799px) 100vw, 799px" /></figure>' );
-
-		$image = $page_load->get_webp_image_html( '<figure class="wp-block-image size-large"><img src="https://example.com/wp-content/uploads/2025/12/image-799x1024.png" alt="" class="wp-image-1140"/></figure>' );
+		$image = $page_load->get_webp_image_html( '<figure class="wp-block-image size-large"><img width="799" height="1024" src="https://example.com/wp-content/uploads/2025/12/image-799x1024.png" alt="" class="wp-image-1140" srcset="https://example.com/wp-content/uploads/2025/12/image-799x1024.png 799w, https://example.com/wp-content/uploads/2025/12/image-234x300.png 234w, https://example.com/wp-content/uploads/2025/12/image-768x985.png 768w, https://example.com/wp-content/uploads/2025/12/image.png 922w" sizes="(max-width: 799px) 100vw, 799px" /></figure>' );
 
 		$this->assertSame(
 			$image,
@@ -252,11 +248,7 @@ class PageLoadTest extends WPMockTestCase {
 				]
 			);
 
-		WP_Mock::userFunction( 'wp_filter_content_tags' )
-			->with( '<figure class="wp-block-image size-large"><img src="https://example.com/wp-content/uploads/2025/12/image-799x1024.png" alt="" class="wp-image-1140"/></figure>' )
-			->andReturn( '<figure class="wp-block-image size-large"><img width="799" height="1024" src="https://example.com/wp-content/uploads/2025/12/image-799x1024.png" alt="" class="wp-image-1140" srcset="https://example.com/wp-content/uploads/2025/12/image-799x1024.png 799w, https://example.com/wp-content/uploads/2025/12/image-234x300.png 234w, https://example.com/wp-content/uploads/2025/12/image-768x985.png 768w, https://example.com/wp-content/uploads/2025/12/image.png 922w" sizes="(max-width: 799px) 100vw, 799px" /></figure>' );
-
-		$image = $page_load->get_webp_image_html( '<figure class="wp-block-image size-large"><img src="https://example.com/wp-content/uploads/2025/12/image-799x1024.png" alt="" class="wp-image-1140"/></figure>', 1 );
+		$image = $page_load->get_webp_image_html( '<figure class="wp-block-image size-large"><img width="799" height="1024" src="https://example.com/wp-content/uploads/2025/12/image-799x1024.png" alt="" class="wp-image-1140" srcset="https://example.com/wp-content/uploads/2025/12/image-799x1024.png 799w, https://example.com/wp-content/uploads/2025/12/image-234x300.png 234w, https://example.com/wp-content/uploads/2025/12/image-768x985.png 768w, https://example.com/wp-content/uploads/2025/12/image.png 922w" sizes="(max-width: 799px) 100vw, 799px" /></figure>', 1 );
 
 		$this->assertSame(
 			$image,
