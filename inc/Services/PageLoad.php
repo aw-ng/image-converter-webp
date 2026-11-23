@@ -10,7 +10,7 @@
 
 namespace ImageConverterWebP\Services;
 
-use DOMDocument;
+use WP_HTML_Tag_Processor;
 use ImageConverterWebP\Interfaces\Kernel;
 use ImageConverterWebP\Abstracts\Service;
 
@@ -156,14 +156,13 @@ class PageLoad extends Service implements Kernel {
 
 		$html = wp_filter_content_tags( $html );
 
-		$dom = new DOMDocument();
-		$dom->loadHTML( $html, LIBXML_NOERROR );
+		$dom = new WP_HTML_Tag_Processor( $html );
 
 		// Generate WebP images.
-		foreach ( $dom->getElementsByTagName( 'img' ) as $image ) {
+		while ( $dom->next_tag( 'img' ) ) {
 			// For the src image.
-			$src    = $image->getAttribute( 'src' );
-			$srcset = $image->getAttribute( 'srcset' );
+			$src    = $dom->get_attribute( 'src' );
+			$srcset = $dom->get_attribute( 'srcset' );
 
 			// Generate the main WebP image for non-webp images.
 			if ( $src && ( pathinfo( $src, PATHINFO_EXTENSION ) !== 'webp' ) ) {
