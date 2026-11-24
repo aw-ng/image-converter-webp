@@ -154,7 +154,7 @@ class PageLoad extends Service implements Kernel {
 			return $html;
 		}
 
-		$dom = $this->get_wp_tag_processor( wp_filter_content_tags( $html ) );;
+		$dom = $this->get_wp_tag_processor( wp_filter_content_tags( $html ) );
 
 		// Generate WebP images.
 		while ( $dom->next_tag( 'img' ) ) {
