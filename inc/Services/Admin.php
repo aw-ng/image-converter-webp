@@ -94,7 +94,8 @@ class Admin extends Service implements Kernel {
 	 */
 	public function register_options_page(): void {
 		$options = ( new Form( Options::$form ) )->get_options();
-		// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+		
+// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 		vprintf(
 			'<section class="wrap">
 				<h1>%s</h1>
