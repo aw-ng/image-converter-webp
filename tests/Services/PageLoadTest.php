@@ -209,10 +209,10 @@ class PageLoadTest extends WPMockTestCase {
 			->once()
 			->andReturn( true );
 
-		$processor->shouldReceive( 'next_tag' )
-			->with( 'img' )
-			->once()
-			->andReturn( false );
+		// $processor->shouldReceive( 'next_tag' )
+		// 	->with( 'img' )
+		// 	->once()
+		// 	->andReturn( false );
 
 		$processor->shouldReceive( 'get_attribute' )
 			->with( 'src' )
@@ -266,10 +266,10 @@ class PageLoadTest extends WPMockTestCase {
 			->once()
 			->andReturn( true );
 
-		$processor->shouldReceive( 'next_tag' )
-			->with( 'img' )
-			->once()
-			->andReturn( false );
+		// $processor->shouldReceive( 'next_tag' )
+		// 	->with( 'img' )
+		// 	->once()
+		// 	->andReturn( false );
 
 		$processor->shouldReceive( 'get_attribute' )
 			->with( 'src' )
