@@ -157,10 +157,10 @@ class PageLoad extends Service implements Kernel {
 		$dom = $this->get_wp_tag_processor( wp_filter_content_tags( $html ) );
 
 		// Generate WebP images.
-		while ( $dom->next_tag( 'img' ) ) {
+		while ( $dom->next_tag( (string) 'img' ) ) {
 			// For the src image.
-			$src    = $dom->get_attribute( 'src' );
-			$srcset = $dom->get_attribute( 'srcset' );
+			$src    = (string) $dom->get_attribute( 'src' );
+			$srcset = (string) $dom->get_attribute( 'srcset' );
 
 			// Generate the main WebP image for non-webp images.
 			if ( $src && ( pathinfo( $src, PATHINFO_EXTENSION ) !== 'webp' ) ) {
