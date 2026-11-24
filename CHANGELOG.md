@@ -15,6 +15,7 @@
 * Chore: Move assignment out of `do_action()` arguments.
 * Chore: Remove unused `$webp` variable in `Main.php` and `MetaData.php` files.
 * Chore: Stop hard-coding stylesheet `url` and `version`.
+* Fix: Fix `i18n` misuse in `settings page`.
 
 ## 1.6.0
 * Feat: Add `More Plugins` options page.

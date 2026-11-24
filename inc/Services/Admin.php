@@ -93,6 +93,7 @@ class Admin extends Service implements Kernel {
 	 * @return void
 	 */
 	public function register_options_page(): void {
+		$options = ( new Form( Options::$form ) )->get_options();
 		// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 		vprintf(
 			'<section class="wrap">
@@ -100,10 +101,11 @@ class Admin extends Service implements Kernel {
 				<p>%s</p>
 				%s
 			</section>',
-			array_map(
-				'__',
-				( new Form( Options::$form ) )->get_options()
-			)
+			[
+				esc_html__( $options['title'], 'image-converter-webp' ),
+				esc_html__( $options['summary'], 'image-converter-webp' ),
+				__( $options['form'], 'image-converter-webp' ),
+			]
 		);
 	}
 
@@ -125,14 +127,11 @@ class Admin extends Service implements Kernel {
 				<p>%s</p>
 				%s
 			</section>',
-			array_map(
-				'__',
-				[
-					'More Plugins',
-					'Check out some other amazing plugin of ours...',
-					$this->pluginate->get_more_plugins(),
-				]
-			)
+			[
+				esc_html__( 'More Plugins', 'image-converter-webp' ),
+				esc_html__( 'Check out some other amazing plugin of ours...', 'image-converter-webp' ),
+				__( $this->pluginate->get_more_plugins(), 'image-converter-webp' ),
+			]
 		);
 	}
 
