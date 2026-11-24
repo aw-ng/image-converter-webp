@@ -154,9 +154,7 @@ class PageLoad extends Service implements Kernel {
 			return $html;
 		}
 
-		$html = wp_filter_content_tags( $html );
-
-		$dom = new WP_HTML_Tag_Processor( $html );
+		$dom = $this->get_wp_tag_processor( wp_filter_content_tags( $html ) );;
 
 		// Generate WebP images.
 		while ( $dom->next_tag( 'img' ) ) {
@@ -227,5 +225,17 @@ class PageLoad extends Service implements Kernel {
 		preg_match_all( '/https?:\/\/[^\s,]+\.(?:png|jpe?g|webp|gif|svg|avif)/i', $srcset, $matches );
 
 		return $matches[0];
+	}
+
+	/**
+	 * Reusable method for obtaining new instance of WP_HTML_Tag_Processor.
+	 *
+	 * @since 1.7.0
+	 *
+	 * @param string $html HTML.
+	 * @return WP_HTML_Tag_Processor object.
+	 */
+	protected function get_wp_tag_processor( $html ) {
+		return new WP_HTML_Tag_Processor( $html );
 	}
 }
