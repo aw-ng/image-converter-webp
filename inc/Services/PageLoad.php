@@ -172,11 +172,11 @@ class PageLoad extends Service implements Kernel {
 				$srcset_images = $this->get_all_srcset_images( $srcset );
 				$srcset_webps  = array_map( fn( $srcset ) => $this->get_webp( $srcset, $id ), $srcset_images );
 
-				$html = str_replace( $srcset_images, $srcset_webps, $html );
+				$dom->set_attribute( 'srcset', str_replace( $srcset_images, $srcset_webps, $srcset ) );
 			}
 		}
 
-		return $html;
+		return $dom->get_updated_html();
 	}
 
 	/**
