@@ -9,7 +9,6 @@ use Badasswp\WPMockTC\WPMockTestCase;
 use ImageConverterWebP\Services\Admin;
 
 /**
- * @covers \ImageConverterWebP\Core\Converter::__construct
  * @covers \ImageConverterWebP\Services\Admin::__construct
  * @covers \ImageConverterWebP\Services\Admin::register
  * @covers \ImageConverterWebP\Services\Admin::register_options_menu

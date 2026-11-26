@@ -23,7 +23,6 @@ use ImageConverterWebP\Services\PageLoad;
  * @covers \ImageConverterWebP\Abstracts\Service::get_instance
  * @covers \ImageConverterWebP\Core\Container::__construct
  * @covers \ImageConverterWebP\Core\Container::register
- * @covers \ImageConverterWebP\Core\Converter::__construct
  * @covers \ImageConverterWebP\Services\Admin::register
  * @covers \ImageConverterWebP\Services\Boot::register
  * @covers \ImageConverterWebP\Services\Logger::register

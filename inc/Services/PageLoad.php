@@ -164,7 +164,8 @@ class PageLoad extends Service implements Kernel {
 
 			// Generate the main WebP image for non-webp images.
 			if ( $src && ( pathinfo( $src, PATHINFO_EXTENSION ) !== 'webp' ) ) {
-				$html = icfw_get_webp_path( $html );
+				$src_webp = icfw_get_webp_path( $src );
+				$dom->set_attribute( 'src', $src_webp );
 			}
 
 			// Generate WebP images for srcset variations.
@@ -185,8 +186,8 @@ class PageLoad extends Service implements Kernel {
 	 * @since 1.0.0
 	 * @since 1.1.0 Moved to PageLoad class.
 	 *
-	 * @param string $img_url  Relative path - 'https://example.com/wp-content/uploads/2024/01/sample.png'.
-	 * @param int    $img_id   Image Attachment ID.
+	 * @param string $img_url Relative path - 'https://example.com/wp-content/uploads/2024/01/sample.png'.
+	 * @param int    $img_id  Image Attachment ID.
 	 *
 	 * @return string
 	 */
@@ -196,14 +197,8 @@ class PageLoad extends Service implements Kernel {
 			$img_id = attachment_url_to_postid( $img_url );
 		}
 
-		// Set Source.
-		$this->source = [
-			'id'  => $img_id,
-			'url' => $img_url,
-		];
-
 		// Convert image to WebP.
-		$webp = $this->converter->convert();
+		$webp = $this->converter->convert( (int) $img_id, (string) $img_url );
 
 		// Fail gracefully, return default image.
 		if ( is_wp_error( $webp ) ) {

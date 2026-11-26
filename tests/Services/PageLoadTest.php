@@ -11,7 +11,6 @@ use ImageConverterWebP\Core\Converter;
 use ImageConverterWebP\Services\PageLoad;
 
 /**
- * @covers \ImageConverterWebP\Core\Converter::__construct
  * @covers \ImageConverterWebP\Services\PageLoad::__construct
  * @covers \ImageConverterWebP\Services\PageLoad::register
  * @covers \ImageConverterWebP\Services\PageLoad::register_render_block
@@ -24,7 +23,6 @@ use ImageConverterWebP\Services\PageLoad;
  * @covers icfw_get_webp_path
  */
 class PageLoadTest extends WPMockTestCase {
-	public array $source;
 	public PageLoad $page_load;
 
 	public function setUp(): void {
@@ -223,6 +221,11 @@ class PageLoadTest extends WPMockTestCase {
 			->andReturn( 'https://example.com/wp-content/uploads/2025/12/image-799x1024.png 799w, https://example.com/wp-content/uploads/2025/12/image-234x300.png 234w' );
 
 		$processor->shouldReceive( 'set_attribute' )
+			->once()
+			->with( 'src', 'https://example.com/wp-content/uploads/2025/12/image-799x1024.webp' )
+			->andReturn( true );
+
+		$processor->shouldReceive( 'set_attribute' )
 			->with( 'srcset', 'https://example.com/wp-content/uploads/2025/12/image-799x1024.webp 799w, https://example.com/wp-content/uploads/2025/12/image-234x300.webp 234w' )
 			->andReturn( true );
 
@@ -287,6 +290,11 @@ class PageLoadTest extends WPMockTestCase {
 			->andReturn( 'https://example.com/wp-content/uploads/2025/12/image-799x1024.png 799w, https://example.com/wp-content/uploads/2025/12/image-234x300.png 234w' );
 
 		$processor->shouldReceive( 'set_attribute' )
+			->once()
+			->with( 'src', 'https://example.com/wp-content/uploads/2025/12/image-799x1024.webp' )
+			->andReturn( true );
+
+		$processor->shouldReceive( 'set_attribute' )
 			->with( 'srcset', 'https://example.com/wp-content/uploads/2025/12/image-799x1024.png 799w, https://example.com/wp-content/uploads/2025/12/image-234x300.png 234w' )
 			->andReturn( true );
 
@@ -334,6 +342,8 @@ class PageLoadTest extends WPMockTestCase {
 		$page_load->converter->shouldAllowMockingProtectedMethods();
 
 		$page_load->converter->shouldReceive( 'convert' )
+			->once()
+			->with( 1, 'https://example.com/wp-content/uploads/2024/01/sample.png' )
 			->andReturn( Mockery::mock( WP_Error::class )->makePartial() );
 
 		$img_html = $page_load->get_webp( 'https://example.com/wp-content/uploads/2024/01/sample.png', 1 );
@@ -350,6 +360,8 @@ class PageLoadTest extends WPMockTestCase {
 		$page_load->converter->shouldAllowMockingProtectedMethods();
 
 		$page_load->converter->shouldReceive( 'convert' )
+			->once()
+			->with( 1, 'https://example.com/wp-content/uploads/2024/01/sample.jpeg' )
 			->andReturn( 'https://example.com/wp-content/uploads/2024/01/sample.webp' );
 
 		$img_html = $page_load->get_webp( 'https://example.com/wp-content/uploads/2024/01/sample.jpeg', 1 );

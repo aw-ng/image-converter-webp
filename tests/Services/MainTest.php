@@ -10,7 +10,6 @@ use ImageConverterWebP\Services\Main;
 use ImageConverterWebP\Core\Converter;
 
 /**
- * @covers \ImageConverterWebP\Core\Converter::__construct
  * @covers \ImageConverterWebP\Services\Main::__construct
  * @covers \ImageConverterWebP\Services\Main::register
  * @covers \ImageConverterWebP\Services\Main::register_webp_img_creation
@@ -85,11 +84,6 @@ class MainTest extends TestCase {
 			->with( 1 )
 			->andReturn( 'https://example.com/wp-content/uploads/2024/01/sample.jpeg' );
 
-		$main->source = [
-			'id'  => 1,
-			'url' => 'https://example.com/wp-content/uploads/2024/01/sample.jpeg',
-		];
-
 		WP_Mock::userFunction( 'get_option' )
 			->once()
 			->with( 'icfw', [] )
@@ -112,11 +106,6 @@ class MainTest extends TestCase {
 		$main->shouldAllowMockingProtectedMethods();
 		$main->converter = $converter;
 
-		$main->source = [
-			'id'  => 1,
-			'url' => 'https://example.com/wp-content/uploads/2024/01/sample.jpeg',
-		];
-
 		WP_Mock::userFunction( 'wp_get_attachment_url' )
 			->once()
 			->with( 1 )
@@ -124,6 +113,7 @@ class MainTest extends TestCase {
 
 		$main->converter->shouldReceive( 'convert' )
 			->once()
+			->with( 1, 'https://example.com/wp-content/uploads/2024/01/sample.jpeg' )
 			->andReturn( 'https://example.com/wp-content/uploads/2024/01/sample.webp' );
 
 		WP_Mock::userFunction( 'get_option' )
@@ -171,8 +161,11 @@ class MainTest extends TestCase {
 			->with( 'https://example.com/wp-content/uploads/2024/01' )
 			->andReturn( 'https://example.com/wp-content/uploads/2024/01/' );
 
-		$main->converter->shouldReceive( 'convert' )
-			->times( 3 );
+		foreach ( [ 'sample1.jpeg', 'sample2.jpeg', 'sample3.jpeg' ] as $file ) {
+			$main->converter->shouldReceive( 'convert' )
+				->once()
+				->with( 1, 'https://example.com/wp-content/uploads/2024/01/' . $file );
+		}
 
 		WP_Mock::userFunction( 'get_option' )
 			->times( 3 )

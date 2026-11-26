@@ -10,7 +10,6 @@ use ImageConverterWebP\Abstracts\Service;
 /**
  * @covers \ImageConverterWebP\Abstracts\Service::__construct
  * @covers \ImageConverterWebP\Abstracts\Service::get_instance
- * @covers \ImageConverterWebP\Core\Converter::__construct
  */
 class ServiceTest extends TestCase {
 	public function setUp(): void {

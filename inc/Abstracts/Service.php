@@ -34,22 +34,12 @@ abstract class Service implements Kernel {
 	public Converter $converter;
 
 	/**
-	 * Source Props.
-	 *
-	 * @since 1.0.0
-	 * @since 1.1.0 Moved to Service abstraction.
-	 *
-	 * @var mixed[]
-	 */
-	public array $source;
-
-	/**
 	 * Set up Converter.
 	 *
 	 * @since 1.1.0
 	 */
 	public function __construct() {
-		$this->converter = new Converter( $this );
+		$this->converter = new Converter();
 	}
 
 	/**

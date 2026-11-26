@@ -76,11 +76,6 @@ class MetaData extends Service implements Kernel {
 			return;
 		}
 
-		$this->source = [
-			'id'  => (int) $attachment_id,
-			'url' => $image_url,
-		];
-
-		$this->converter->convert();
+		$this->converter->convert( (int) $attachment_id, $image_url );
 	}
 }

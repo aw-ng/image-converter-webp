@@ -7,23 +7,22 @@ use Mockery;
 use WP_Error;
 use WP_Mock\Tools\TestCase;
 use ImageConverterWebP\Core\Converter;
-use ImageConverterWebP\Services\Main;
 
 /**
- * @covers \ImageConverterWebP\Abstracts\Service::__construct
- * @covers \ImageConverterWebP\Core\Converter::__construct
  * @covers \ImageConverterWebP\Core\Converter::convert
  * @covers \ImageConverterWebP\Core\Converter::get_options
- * @covers \ImageConverterWebP\Core\Converter::set_image_source
- * @covers \ImageConverterWebP\Core\Converter::set_image_destination
+ * @covers \ImageConverterWebP\Core\Converter::get_image_source
+ * @covers \ImageConverterWebP\Core\Converter::get_image_destination
  */
 class ConverterTest extends TestCase {
+	const BASE_URL = 'https://example.com/wp-content/uploads/2024/01';
+
 	public $converter;
 
 	public function setUp(): void {
 		WP_Mock::setUp();
 
-		$this->converter = new Converter( new Main() );
+		$this->converter = new Converter();
 	}
 
 	public function tearDown(): void {
@@ -285,18 +284,9 @@ class ConverterTest extends TestCase {
 		$this->assertConditionsMet();
 	}
 
-	public function test_set_image_source() {
-		$service = Mockery::mock( Main::class )->makePartial();
-		$service->shouldAllowMockingProtectedMethods();
-
+	public function test_get_image_source() {
 		$converter = Mockery::mock( Converter::class )->makePartial();
 		$converter->shouldAllowMockingProtectedMethods();
-		$converter->service = $service;
-
-		$converter->service->source = [
-			'id'  => 1,
-			'url' => 'https://example.com/wp-content/uploads/2024/01/sample.jpeg',
-		];
 
 		WP_Mock::userFunction( 'wp_upload_dir' )
 			->once()
@@ -307,22 +297,16 @@ class ConverterTest extends TestCase {
 				]
 			);
 
-		$converter->set_image_source();
-
 		$this->assertSame(
 			'/var/www/html/wp-content/uploads/2024/01/sample.jpeg',
-			$converter->abs_source
+			$converter->get_image_source( 'https://example.com/wp-content/uploads/2024/01/sample.jpeg' )
 		);
 		$this->assertConditionsMet();
 	}
 
-	public function test_set_image_destination() {
-		$service = Mockery::mock( Main::class )->makePartial();
-		$service->shouldAllowMockingProtectedMethods();
-
+	public function test_get_image_destination() {
 		$converter = Mockery::mock( Converter::class )->makePartial();
 		$converter->shouldAllowMockingProtectedMethods();
-		$converter->service = $service;
 
 		WP_Mock::expectFilter(
 			'icfw_image_abs_destination',
@@ -338,68 +322,41 @@ class ConverterTest extends TestCase {
 			'.jpeg'
 		);
 
-		$converter->service->source = [
-			'id'  => 1,
-			'url' => 'https://example.com/wp-content/uploads/2024/01/sample.jpeg',
-		];
-
-		// Image Source (Absolute Path).
-		$converter->abs_source = '/var/www/html/wp-content/uploads/2024/01/sample.jpeg';
-
-		$converter->set_image_destination();
-
-		$this->assertSame(
-			'/var/www/html/wp-content/uploads/2024/01/sample.webp',
-			$converter->abs_dest
+		$destination = $converter->get_image_destination(
+			'https://example.com/wp-content/uploads/2024/01/sample.jpeg',
+			'/var/www/html/wp-content/uploads/2024/01/sample.jpeg'
 		);
+
 		$this->assertSame(
-			'https://example.com/wp-content/uploads/2024/01/sample.webp',
-			$converter->rel_dest
+			[
+				'abs' => '/var/www/html/wp-content/uploads/2024/01/sample.webp',
+				'rel' => 'https://example.com/wp-content/uploads/2024/01/sample.webp',
+			],
+			$destination
 		);
 		$this->assertConditionsMet();
 	}
 
-	public function test_convert_fails_if_source_is_empty_and_returns_WP_error() {
-		$converter = Mockery::mock( Converter::class )->makePartial();
-		$converter->shouldAllowMockingProtectedMethods();
-
-		$converter->abs_source = '';
-
-		$converter->shouldReceive( 'set_image_source' )
-			->once()->with();
-
-		$converter->shouldReceive( 'set_image_destination' )
-			->once()->with();
+	public function test_convert_fails_if_source_does_not_exist_and_returns_WP_error() {
+		$this->mock_paths( 'missing.jpeg' );
 
 		WP_Mock::userFunction( '__' )
 			->once()
 			->with( 'Error: %s does not exist.', 'image-converter-webp' )
-			->andReturn( 'Error: does not exist.' );
+			->andReturn( 'Error: %s does not exist.' );
 
-		$mock = Mockery::mock( WP_Error::class );
+		// Define WP_Error for the test run.
+		Mockery::mock( WP_Error::class );
 
-		$webp = $converter->convert();
+		$webp = $this->converter->convert( 1, self::BASE_URL . '/missing.jpeg' );
 
 		$this->assertInstanceOf( 'WP_Error', $webp );
 		$this->assertConditionsMet();
 	}
 
 	public function test_convert_fails_if_source_is_not_an_image_and_returns_WP_error() {
-		$converter = Mockery::mock( Converter::class )->makePartial();
-		$converter->shouldAllowMockingProtectedMethods();
-
-		$converter->abs_source = __DIR__ . '/sample.txt';
-		$converter->abs_dest   = __DIR__ . '/sample.webp';
-		$converter->rel_dest   = str_replace( __DIR__, 'https://example.com/wp-content/uploads/2024/01', $converter->abs_dest );
-
-		// Create Mock Files.
-		$this->create_mock_file( $converter->abs_source );
-
-		$converter->shouldReceive( 'set_image_source' )
-			->once()->with();
-
-		$converter->shouldReceive( 'set_image_destination' )
-			->once()->with();
+		$this->mock_paths( 'sample.txt' );
+		$this->create_mock_file( __DIR__ . '/sample.txt' );
 
 		WP_Mock::userFunction( 'wp_check_filetype' )
 			->once()
@@ -413,35 +370,22 @@ class ConverterTest extends TestCase {
 		WP_Mock::userFunction( '__' )
 			->once()
 			->with( 'Error: %s is not an image.', 'image-converter-webp' )
-			->andReturn( 'Error: is not an image.' );
+			->andReturn( 'Error: %s is not an image.' );
 
-		$mock = Mockery::mock( WP_Error::class );
+		// Define WP_Error for the test run.
+		Mockery::mock( WP_Error::class );
 
-		$webp = $converter->convert();
+		$webp = $this->converter->convert( 1, self::BASE_URL . '/sample.txt' );
 
 		$this->assertInstanceOf( 'WP_Error', $webp );
 		$this->assertConditionsMet();
 
-		// Destroy Mock Files.
-		$this->destroy_mock_image( $converter->abs_source );
+		$this->destroy_mock_file( __DIR__ . '/sample.txt' );
 	}
 
 	public function test_convert_fails_if_filetype_is_not_jpg_or_png_and_returns_WP_error() {
-		$converter = Mockery::mock( Converter::class )->makePartial();
-		$converter->shouldAllowMockingProtectedMethods();
-
-		$converter->abs_source = __DIR__ . '/sample.gif';
-		$converter->abs_dest   = __DIR__ . '/sample.webp';
-		$converter->rel_dest   = str_replace( __DIR__, 'https://example.com/wp-content/uploads/2024/01', $converter->abs_dest );
-
-		// Create Mock Files.
-		$this->create_mock_file( $converter->abs_source );
-
-		$converter->shouldReceive( 'set_image_source' )
-			->once()->with();
-
-		$converter->shouldReceive( 'set_image_destination' )
-			->once()->with();
+		$this->mock_paths( 'sample.gif' );
+		$this->create_mock_file( __DIR__ . '/sample.gif' );
 
 		WP_Mock::userFunction( 'wp_check_filetype' )
 			->once()
@@ -457,34 +401,21 @@ class ConverterTest extends TestCase {
 			->with( 'Error: Invalid image file type.', 'image-converter-webp' )
 			->andReturn( 'Error: Invalid image file type.' );
 
-		$mock = Mockery::mock( WP_Error::class );
+		// Define WP_Error for the test run.
+		Mockery::mock( WP_Error::class );
 
-		$webp = $converter->convert();
+		$webp = $this->converter->convert( 1, self::BASE_URL . '/sample.gif' );
 
 		$this->assertInstanceOf( 'WP_Error', $webp );
 		$this->assertConditionsMet();
 
-		// Destroy Mock Files.
-		$this->destroy_mock_image( $converter->abs_source );
+		$this->destroy_mock_file( __DIR__ . '/sample.gif' );
 	}
 
 	public function test_convert_returns_same_if_destination_image_exists() {
-		$converter = Mockery::mock( Converter::class )->makePartial();
-		$converter->shouldAllowMockingProtectedMethods();
-
-		$converter->abs_source = __DIR__ . '/sample.jpeg';
-		$converter->abs_dest   = __DIR__ . '/sample.webp';
-		$converter->rel_dest   = str_replace( __DIR__, 'https://example.com/wp-content/uploads/2024/01', $converter->abs_dest );
-
-		// Create Mock Images.
-		$this->create_mock_image( $converter->abs_source );
-		$this->create_mock_image( $converter->abs_dest );
-
-		$converter->shouldReceive( 'set_image_source' )
-			->once()->with();
-
-		$converter->shouldReceive( 'set_image_destination' )
-			->once()->with();
+		$this->mock_paths( 'sample.jpeg' );
+		$this->create_mock_image( __DIR__ . '/sample.jpeg' );
+		$this->create_mock_image( __DIR__ . '/sample.webp' );
 
 		WP_Mock::userFunction( 'wp_check_filetype' )
 			->once()
@@ -495,41 +426,21 @@ class ConverterTest extends TestCase {
 				]
 			);
 
-		$webp = $converter->convert();
+		$webp = $this->converter->convert( 1, self::BASE_URL . '/sample.jpeg' );
 
-		$this->assertSame( 'https://example.com/wp-content/uploads/2024/01/sample.webp', $webp );
+		$this->assertSame( self::BASE_URL . '/sample.webp', $webp );
 		$this->assertConditionsMet();
 
-		// Destroy Mock Images.
-		$this->destroy_mock_image( $converter->abs_source );
-		$this->destroy_mock_image( $converter->abs_dest );
+		$this->destroy_mock_image( __DIR__ . '/sample.jpeg' );
+		$this->destroy_mock_image( __DIR__ . '/sample.webp' );
 	}
 
 	public function test_convert_returns_webp() {
-		$service = Mockery::mock( Main::class )->makePartial();
-		$service->shouldAllowMockingProtectedMethods();
-
 		$converter = Mockery::mock( Converter::class )->makePartial();
 		$converter->shouldAllowMockingProtectedMethods();
-		$converter->service = $service;
 
-		$converter->service->source = [
-			'id'  => 1,
-			'url' => 'https://example.com/wp-content/uploads/2024/01/sample.jpeg',
-		];
-
-		$converter->abs_source = __DIR__ . '/sample.jpeg';
-		$converter->abs_dest   = __DIR__ . '/sample.webp';
-		$converter->rel_dest   = str_replace( __DIR__, 'https://example.com/wp-content/uploads/2024/01', $converter->abs_dest );
-
-		// Create Mock Images.
-		$this->create_mock_image( $converter->abs_source );
-
-		$converter->shouldReceive( 'set_image_source' )
-			->once()->with();
-
-		$converter->shouldReceive( 'set_image_destination' )
-			->once()->with();
+		$this->mock_paths( 'sample.jpeg' );
+		$this->create_mock_image( __DIR__ . '/sample.jpeg' );
 
 		WP_Mock::userFunction( 'wp_check_filetype' )
 			->once()
@@ -551,21 +462,101 @@ class ConverterTest extends TestCase {
 				]
 			);
 
-		WP_Mock::expectAction(
-			'icfw_convert',
-			'https://example.com/wp-content/uploads/2024/01/sample.webp',
-			1
-		);
+		WP_Mock::expectAction( 'icfw_convert', self::BASE_URL . '/sample.webp', 1 );
 
-		$webp = $converter->convert();
+		$webp = $converter->convert( 1, self::BASE_URL . '/sample.jpeg' );
 
-		$this->assertTrue( file_exists( $converter->abs_dest ) );
-		$this->assertSame( 'https://example.com/wp-content/uploads/2024/01/sample.webp', $webp );
+		$this->assertTrue( file_exists( __DIR__ . '/sample.webp' ) );
+		$this->assertSame( self::BASE_URL . '/sample.webp', $webp );
 		$this->assertConditionsMet();
 
-		// Destroy Mock Images.
-		$this->destroy_mock_image( $converter->abs_source );
-		$this->destroy_mock_image( $converter->abs_dest );
+		$this->destroy_mock_image( __DIR__ . '/sample.jpeg' );
+		$this->destroy_mock_image( __DIR__ . '/sample.webp' );
+	}
+
+	public function test_convert_uses_only_its_arguments_across_successive_calls() {
+		$this->create_mock_image( __DIR__ . '/first.jpeg' );
+		$this->create_mock_image( __DIR__ . '/first.webp' );
+		$this->create_mock_image( __DIR__ . '/second.jpeg' );
+		$this->create_mock_image( __DIR__ . '/second.webp' );
+
+		WP_Mock::userFunction( 'wp_upload_dir' )
+			->twice()
+			->andReturn(
+				[
+					'baseurl' => self::BASE_URL,
+					'basedir' => __DIR__,
+				]
+			);
+
+		foreach ( [ 'first', 'second' ] as $name ) {
+			WP_Mock::expectFilter(
+				'icfw_image_abs_destination',
+				__DIR__ . "/{$name}.webp",
+				__DIR__ . "/{$name}.jpeg",
+				'.jpeg'
+			);
+
+			WP_Mock::expectFilter(
+				'icfw_image_rel_destination',
+				self::BASE_URL . "/{$name}.webp",
+				self::BASE_URL . "/{$name}.jpeg",
+				'.jpeg'
+			);
+
+			WP_Mock::userFunction( 'wp_check_filetype' )
+				->once()
+				->with( __DIR__ . "/{$name}.jpeg" )
+				->andReturn(
+					[
+						'type' => 'image/jpeg',
+					]
+				);
+		}
+
+		// The same instance must not carry anything over from the first call.
+		$this->assertSame( self::BASE_URL . '/first.webp', $this->converter->convert( 1, self::BASE_URL . '/first.jpeg' ) );
+		$this->assertSame( self::BASE_URL . '/second.webp', $this->converter->convert( 2, self::BASE_URL . '/second.jpeg' ) );
+		$this->assertConditionsMet();
+
+		foreach ( [ 'first.jpeg', 'first.webp', 'second.jpeg', 'second.webp' ] as $file ) {
+			$this->destroy_mock_image( __DIR__ . '/' . $file );
+		}
+	}
+
+	/**
+	 * Map the uploads URL onto this test directory and expect
+	 * the destination filters for the given file.
+	 *
+	 * @param string $file File name, e.g. 'sample.jpeg'.
+	 * @return void
+	 */
+	private function mock_paths( string $file ): void {
+		$extension = '.' . pathinfo( $file, PATHINFO_EXTENSION );
+		$webp      = str_replace( $extension, '.webp', $file );
+
+		WP_Mock::userFunction( 'wp_upload_dir' )
+			->once()
+			->andReturn(
+				[
+					'baseurl' => self::BASE_URL,
+					'basedir' => __DIR__,
+				]
+			);
+
+		WP_Mock::expectFilter(
+			'icfw_image_abs_destination',
+			__DIR__ . '/' . $webp,
+			__DIR__ . '/' . $file,
+			$extension
+		);
+
+		WP_Mock::expectFilter(
+			'icfw_image_rel_destination',
+			self::BASE_URL . '/' . $webp,
+			self::BASE_URL . '/' . $file,
+			$extension
+		);
 	}
 
 	public function create_mock_image( $image_file_name ) {

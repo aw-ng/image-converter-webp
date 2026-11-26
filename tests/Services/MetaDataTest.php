@@ -9,7 +9,6 @@ use ImageConverterWebP\Core\Converter;
 use ImageConverterWebP\Services\MetaData;
 
 /**
- * @covers \ImageConverterWebP\Core\Converter::__construct
  * @covers \ImageConverterWebP\Services\MetaData::__construct
  * @covers \ImageConverterWebP\Services\MetaData::register
  * @covers \ImageConverterWebP\Services\MetaData::add_webp_meta_to_attachment
@@ -117,7 +116,9 @@ class MetaDataTest extends WPMockTestCase {
 		$this->metadata->converter = Mockery::mock( Converter::class )->makePartial();
 		$this->metadata->converter->shouldAllowMockingProtectedMethods();
 
-		$this->metadata->converter->shouldReceive( 'convert' );
+		$this->metadata->converter->shouldReceive( 'convert' )
+			->once()
+			->with( 1, 'https://example.com/wp-content/uploads/2024/01/sample-scaled.jpg' );
 
 		$this->metadata->add_webp_for_scaled_images( $webp, 1 );
 
