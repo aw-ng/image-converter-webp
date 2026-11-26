@@ -5,6 +5,7 @@ namespace ImageConverterWebP\Tests\Services;
 use WP_Mock;
 use Mockery;
 use WP_Error;
+use WP_HTML_Tag_Processor;
 use Badasswp\WPMockTC\WPMockTestCase;
 use ImageConverterWebP\Core\Converter;
 use ImageConverterWebP\Services\PageLoad;
@@ -200,8 +201,38 @@ class PageLoadTest extends WPMockTestCase {
 	}
 
 	public function test_get_webp_image_html_works_correctly_and_returns_new_html_with_webp_images() {
+		$processor = Mockery::mock( WP_HTML_Tag_Processor::class )->makePartial();
+		$processor->shouldAllowMockingProtectedMethods();
+
+		$processor->shouldReceive( 'next_tag' )
+			->with( [ 'tag_name' => 'img' ] )
+			->once()
+			->andReturn( true );
+
+		$processor->shouldReceive( 'next_tag' )
+			->with( [ 'tag_name' => 'img' ] )
+			->once()
+			->andReturn( false );
+
+		$processor->shouldReceive( 'get_attribute' )
+			->with( 'src' )
+			->andReturn( 'https://example.com/wp-content/uploads/2025/12/image-799x1024.png' );
+
+		$processor->shouldReceive( 'get_attribute' )
+			->with( 'srcset' )
+			->andReturn( 'https://example.com/wp-content/uploads/2025/12/image-799x1024.png 799w, https://example.com/wp-content/uploads/2025/12/image-234x300.png 234w' );
+
+		$processor->shouldReceive( 'set_attribute' )
+			->with( 'srcset', 'https://example.com/wp-content/uploads/2025/12/image-799x1024.webp 799w, https://example.com/wp-content/uploads/2025/12/image-234x300.webp 234w' )
+			->andReturn( true );
+
+		$processor->shouldReceive( 'get_updated_html' )
+			->andReturn( '<figure class="wp-block-image size-large"><img src="https://example.com/wp-content/uploads/2025/12/image-799x1024.webp" alt="" class="wp-image-1140" srcset="https://example.com/wp-content/uploads/2025/12/image-799x1024.webp 799w, https://example.com/wp-content/uploads/2025/12/image-234x300.webp 234w, https://example.com/wp-content/uploads/2025/12/image-768x985.webp 768w, https://example.com/wp-content/uploads/2025/12/image.webp 922w" sizes="(max-width: 799px) 100vw, 799px"/></figure>' );
+
 		$page_load = Mockery::mock( PageLoad::class )->makePartial();
 		$page_load->shouldAllowMockingProtectedMethods();
+
+		$page_load->shouldReceive( 'get_wp_tag_processor' )->andReturn( $processor );
 
 		$page_load->shouldReceive( 'get_webp' )
 			->andReturnUsing(
@@ -228,14 +259,44 @@ class PageLoadTest extends WPMockTestCase {
 
 		$this->assertSame(
 			$image,
-			'<figure class="wp-block-image size-large"><img width="799" height="1024" src="https://example.com/wp-content/uploads/2025/12/image-799x1024.webp" alt="" class="wp-image-1140" srcset="https://example.com/wp-content/uploads/2025/12/image-799x1024.webp 799w, https://example.com/wp-content/uploads/2025/12/image-234x300.webp 234w, https://example.com/wp-content/uploads/2025/12/image-768x985.webp 768w, https://example.com/wp-content/uploads/2025/12/image.webp 922w" sizes="(max-width: 799px) 100vw, 799px" /></figure>'
+			'<figure class="wp-block-image size-large"><img src="https://example.com/wp-content/uploads/2025/12/image-799x1024.webp" alt="" class="wp-image-1140" srcset="https://example.com/wp-content/uploads/2025/12/image-799x1024.webp 799w, https://example.com/wp-content/uploads/2025/12/image-234x300.webp 234w, https://example.com/wp-content/uploads/2025/12/image-768x985.webp 768w, https://example.com/wp-content/uploads/2025/12/image.webp 922w" sizes="(max-width: 799px) 100vw, 799px"/></figure>'
 		);
 		$this->assertConditionsMet();
 	}
 
 	public function test_get_webp_image_html_fails_gracefully_and_returns_default_html_with_original_images() {
+		$processor = Mockery::mock( WP_HTML_Tag_Processor::class )->makePartial();
+		$processor->shouldAllowMockingProtectedMethods();
+
+		$processor->shouldReceive( 'next_tag' )
+			->with( [ 'tag_name' => 'img' ] )
+			->once()
+			->andReturn( true );
+
+		$processor->shouldReceive( 'next_tag' )
+			->with( [ 'tag_name' => 'img' ] )
+			->once()
+			->andReturn( false );
+
+		$processor->shouldReceive( 'get_attribute' )
+			->with( 'src' )
+			->andReturn( 'https://example.com/wp-content/uploads/2025/12/image-799x1024.png' );
+
+		$processor->shouldReceive( 'get_attribute' )
+			->with( 'srcset' )
+			->andReturn( 'https://example.com/wp-content/uploads/2025/12/image-799x1024.png 799w, https://example.com/wp-content/uploads/2025/12/image-234x300.png 234w' );
+
+		$processor->shouldReceive( 'set_attribute' )
+			->with( 'srcset', 'https://example.com/wp-content/uploads/2025/12/image-799x1024.png 799w, https://example.com/wp-content/uploads/2025/12/image-234x300.png 234w' )
+			->andReturn( true );
+
+		$processor->shouldReceive( 'get_updated_html' )
+			->andReturn( '<figure class="wp-block-image size-large"><img src="https://example.com/wp-content/uploads/2025/12/image-799x1024.png" alt="" class="wp-image-1140" srcset="https://example.com/wp-content/uploads/2025/12/image-799x1024.png 799w, https://example.com/wp-content/uploads/2025/12/image-234x300.png 234w, https://example.com/wp-content/uploads/2025/12/image-768x985.png 768w, https://example.com/wp-content/uploads/2025/12/image.png 922w" sizes="(max-width: 799px) 100vw, 799px"/></figure>' );
+
 		$page_load = Mockery::mock( PageLoad::class )->makePartial();
 		$page_load->shouldAllowMockingProtectedMethods();
+
+		$page_load->shouldReceive( 'get_wp_tag_processor' )->andReturn( $processor );
 
 		$page_load->converter = Mockery::mock( Converter::class )->makePartial();
 		$page_load->converter->shouldAllowMockingProtectedMethods();
@@ -260,7 +321,7 @@ class PageLoadTest extends WPMockTestCase {
 
 		$this->assertSame(
 			$image,
-			'<figure class="wp-block-image size-large"><img width="799" height="1024" src="https://example.com/wp-content/uploads/2025/12/image-799x1024.png" alt="" class="wp-image-1140" srcset="https://example.com/wp-content/uploads/2025/12/image-799x1024.png 799w, https://example.com/wp-content/uploads/2025/12/image-234x300.png 234w, https://example.com/wp-content/uploads/2025/12/image-768x985.png 768w, https://example.com/wp-content/uploads/2025/12/image.png 922w" sizes="(max-width: 799px) 100vw, 799px" /></figure>'
+			'<figure class="wp-block-image size-large"><img src="https://example.com/wp-content/uploads/2025/12/image-799x1024.png" alt="" class="wp-image-1140" srcset="https://example.com/wp-content/uploads/2025/12/image-799x1024.png 799w, https://example.com/wp-content/uploads/2025/12/image-234x300.png 234w, https://example.com/wp-content/uploads/2025/12/image-768x985.png 768w, https://example.com/wp-content/uploads/2025/12/image.png 922w" sizes="(max-width: 799px) 100vw, 799px"/></figure>'
 		);
 		$this->assertConditionsMet();
 	}

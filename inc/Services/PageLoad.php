@@ -10,7 +10,7 @@
 
 namespace ImageConverterWebP\Services;
 
-use DOMDocument;
+use WP_HTML_Tag_Processor;
 use ImageConverterWebP\Interfaces\Kernel;
 use ImageConverterWebP\Abstracts\Service;
 
@@ -154,16 +154,13 @@ class PageLoad extends Service implements Kernel {
 			return $html;
 		}
 
-		$html = wp_filter_content_tags( $html );
-
-		$dom = new DOMDocument();
-		$dom->loadHTML( $html, LIBXML_NOERROR );
+		$dom = $this->get_wp_tag_processor( wp_filter_content_tags( $html ) );
 
 		// Generate WebP images.
-		foreach ( $dom->getElementsByTagName( 'img' ) as $image ) {
+		while ( $dom->next_tag( array( 'tag_name' => 'img' ) ) ) {
 			// For the src image.
-			$src    = $image->getAttribute( 'src' );
-			$srcset = $image->getAttribute( 'srcset' );
+			$src    = (string) $dom->get_attribute( 'src' );
+			$srcset = (string) $dom->get_attribute( 'srcset' );
 
 			// Generate the main WebP image for non-webp images.
 			if ( $src && ( pathinfo( $src, PATHINFO_EXTENSION ) !== 'webp' ) ) {
@@ -175,11 +172,11 @@ class PageLoad extends Service implements Kernel {
 				$srcset_images = $this->get_all_srcset_images( $srcset );
 				$srcset_webps  = array_map( fn( $srcset ) => $this->get_webp( $srcset, $id ), $srcset_images );
 
-				$html = str_replace( $srcset_images, $srcset_webps, $html );
+				$dom->set_attribute( 'srcset', str_replace( $srcset_images, $srcset_webps, $srcset ) );
 			}
 		}
 
-		return $html;
+		return $dom->get_updated_html();
 	}
 
 	/**
@@ -228,5 +225,17 @@ class PageLoad extends Service implements Kernel {
 		preg_match_all( '/https?:\/\/[^\s,]+\.(?:png|jpe?g|webp|gif|svg|avif)/i', $srcset, $matches );
 
 		return $matches[0];
+	}
+
+	/**
+	 * Reusable method for obtaining new instance of WP_HTML_Tag_Processor.
+	 *
+	 * @since 1.7.0
+	 *
+	 * @param string $html HTML.
+	 * @return WP_HTML_Tag_Processor object.
+	 */
+	protected function get_wp_tag_processor( $html ) {
+		return new WP_HTML_Tag_Processor( $html );
 	}
 }
