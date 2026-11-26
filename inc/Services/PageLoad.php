@@ -164,7 +164,8 @@ class PageLoad extends Service implements Kernel {
 
 			// Generate the main WebP image for non-webp images.
 			if ( $src && ( pathinfo( $src, PATHINFO_EXTENSION ) !== 'webp' ) ) {
-				$html = icfw_get_webp_path( $html );
+				$src_webp = icfw_get_webp_path( $src );
+				$dom->set_attribute( 'src', $src_webp );
 			}
 
 			// Generate WebP images for srcset variations.
@@ -194,6 +195,7 @@ class PageLoad extends Service implements Kernel {
 		// Get image ID.
 		if ( ! $img_id ) {
 			$img_id = attachment_url_to_postid( $img_url );
+			error_log( '|||||||||||| Attachment ID not provided, attempting to get it from URL: ' . $img_url );
 		}
 
 		// Convert image to WebP.
