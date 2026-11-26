@@ -196,14 +196,8 @@ class PageLoad extends Service implements Kernel {
 			$img_id = attachment_url_to_postid( $img_url );
 		}
 
-		// Set Source.
-		$this->source = [
-			'id'  => $img_id,
-			'url' => $img_url,
-		];
-
 		// Convert image to WebP.
-		$webp = $this->converter->convert();
+		$webp = $this->converter->convert( (int) $img_id, (string) $img_url );
 
 		// Fail gracefully, return default image.
 		if ( is_wp_error( $webp ) ) {

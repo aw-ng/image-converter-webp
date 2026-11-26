@@ -13,102 +13,55 @@ namespace ImageConverterWebP\Core;
 use WP_Error;
 use Exception;
 use WebPConvert\WebPConvert;
-use ImageConverterWebP\Abstracts\Service;
 
 class Converter {
-	/**
-	 * Image source (absolute path).
-	 *
-	 * @since 1.0.0
-	 * @since 1.1.0 Moved to Converter.
-	 *
-	 * @var string
-	 */
-	public string $abs_source = '';
-
-	/**
-	 * Image destination (absolute path).
-	 *
-	 * @since 1.0.0
-	 * @since 1.1.0 Moved to Converter.
-	 *
-	 * @var string
-	 */
-	public string $abs_dest = '';
-
-	/**
-	 * Image destination (relative path).
-	 *
-	 * @since 1.0.0
-	 * @since 1.1.0 Moved to Converter.
-	 *
-	 * @var string
-	 */
-	public string $rel_dest = '';
-
-	/**
-	 * Service.
-	 *
-	 * @since 1.1.0
-	 *
-	 * @var Service
-	 */
-	public Service $service;
-
-	/**
-	 * Get Service.
-	 *
-	 * Pass in Service class as constructor params
-	 * to enable us retrieve ID|URL.
-	 *
-	 * @since 1.1.0
-	 *
-	 * @param Service $service
-	 */
-	public function __construct( Service $service ) {
-		$this->service = $service;
-	}
-
 	/**
 	 * Convert to WebP image.
 	 *
 	 * This method is responsible for taking the source image
-	 * and converting it to the WebP equivalent.
+	 * and converting it to the WebP equivalent. It holds no state
+	 * between calls: the result depends only on its arguments,
+	 * the plugin settings and the filesystem.
 	 *
 	 * @since 1.0.0
 	 * @since 1.1.0 Moved to Converter.
+	 * @since 1.7.0 Accept attachment ID and source URL as arguments.
+	 *
+	 * @param int    $attachment_id Image Attachment ID.
+	 * @param string $source_url    Image URL - 'https://example.com/wp-content/uploads/2024/01/sample.png'.
 	 *
 	 * @return string|\WP_Error
 	 */
-	public function convert() {
-		// Set image source and destination.
-		$this->set_image_source();
-		$this->set_image_destination();
+	public function convert( int $attachment_id, string $source_url ) {
+		// Get image source and destination.
+		$abs_source  = $this->get_image_source( $source_url );
+		$destination = $this->get_image_destination( $source_url, $abs_source );
+		$abs_dest    = $destination['abs'];
 
 		// Set response.
-		$webp = $this->rel_dest;
+		$webp = $destination['rel'];
 
 		// Bail out, if source is empty.
-		if ( ! file_exists( $this->abs_source ) ) {
+		if ( ! file_exists( $abs_source ) ) {
 			return new WP_Error(
 				'webp-img-error',
 				sprintf(
 					/* translators: Absolute path to Source Image. */
 					__( 'Error: %s does not exist.', 'image-converter-webp' ),
-					$this->abs_source
+					$abs_source
 				)
 			);
 		}
 
 		// Bail out, if it is not an image.
-		$filetype = wp_check_filetype( $this->abs_source );
+		$filetype = wp_check_filetype( $abs_source );
 		if ( false === strpos( (string) $filetype['type'], 'image/' ) ) {
 			return new WP_Error(
 				'webp-img-error',
 				sprintf(
 					/* translators: Absolute path to Source Image. */
 					__( 'Error: %s is not an image.', 'image-converter-webp' ),
-					$this->abs_source
+					$abs_source
 				)
 			);
 		}
@@ -122,13 +75,13 @@ class Converter {
 		}
 
 		// Bail out, if dest. image exists.
-		if ( file_exists( $this->abs_dest ) ) {
+		if ( file_exists( $abs_dest ) ) {
 			return $webp;
 		}
 
 		// Convert to WebP image.
 		try {
-			WebPConvert::convert( $this->abs_source, $this->abs_dest, $this->get_options() );
+			WebPConvert::convert( $abs_source, $abs_dest, $this->get_options() );
 		} catch ( Exception $e ) {
 			$webp = new WP_Error(
 				'webp-img-error',
@@ -139,9 +92,6 @@ class Converter {
 				)
 			);
 		}
-
-		// Set Attachment ID.
-		$attachment_id = $this->service->source['id'];
 
 		/**
 		 * Fires after Image is converted.
@@ -161,40 +111,44 @@ class Converter {
 	}
 
 	/**
-	 * Set Image source.
+	 * Get Image source.
 	 *
-	 * Get the image's relative path and replace with
-	 * absolute path.
+	 * Get the image's absolute path by replacing the
+	 * uploads base URL with the uploads base directory.
 	 *
 	 * @since 1.0.0
 	 * @since 1.1.0 Moved to Converter.
+	 * @since 1.7.0 Renamed from `set_image_source` and made stateless.
 	 *
-	 * @return void
+	 * @param string $source_url Image URL.
+	 * @return string
 	 */
-	protected function set_image_source(): void {
-		$img_uploads_dir  = wp_upload_dir();
-		$this->abs_source = str_replace( $img_uploads_dir['baseurl'], $img_uploads_dir['basedir'], $this->service->source['url'] );
+	protected function get_image_source( string $source_url ): string {
+		$img_uploads_dir = wp_upload_dir();
+
+		return str_replace( $img_uploads_dir['baseurl'], $img_uploads_dir['basedir'], $source_url );
 	}
 
 	/**
-	 * Set Image destination.
+	 * Get Image destination.
 	 *
-	 * Using image sources, set absolute and relative
-	 * paths for images.
+	 * Using image sources, get absolute and relative
+	 * paths for the WebP image.
 	 *
 	 * @since 1.0.0
 	 * @since 1.1.0 Moved to Converter.
+	 * @since 1.7.0 Renamed from `set_image_destination` and made stateless.
 	 *
-	 * @return void
+	 * @param string $source_url Image URL.
+	 * @param string $abs_source Image absolute path.
+	 *
+	 * @return array{abs: string, rel: string}
 	 */
-	protected function set_image_destination(): void {
-		$image_extension = '.' . pathinfo( $this->service->source['url'], PATHINFO_EXTENSION );
+	protected function get_image_destination( string $source_url, string $abs_source ): array {
+		$image_extension = '.' . pathinfo( $source_url, PATHINFO_EXTENSION );
 
-		// Get relative source url.
-		$rel_source_url = $this->service->source['url'] ?? '';
-
-		$image_abs_dest = str_replace( $image_extension, '.webp', $this->abs_source );
-		$image_rel_dest = str_replace( $image_extension, '.webp', $rel_source_url );
+		$image_abs_dest = str_replace( $image_extension, '.webp', $abs_source );
+		$image_rel_dest = str_replace( $image_extension, '.webp', $source_url );
 
 		/**
 		 * Filter Image absolute destination.
@@ -207,7 +161,7 @@ class Converter {
 		 *
 		 * @return string
 		 */
-		$this->abs_dest = apply_filters( 'icfw_image_abs_destination', $image_abs_dest, $this->abs_source, $image_extension );
+		$abs_dest = (string) apply_filters( 'icfw_image_abs_destination', $image_abs_dest, $abs_source, $image_extension );
 
 		/**
 		 * Filter Image relative destination.
@@ -220,7 +174,12 @@ class Converter {
 		 *
 		 * @return string
 		 */
-		$this->rel_dest = apply_filters( 'icfw_image_rel_destination', $image_rel_dest, $rel_source_url, $image_extension );
+		$rel_dest = (string) apply_filters( 'icfw_image_rel_destination', $image_rel_dest, $source_url, $image_extension );
+
+		return [
+			'abs' => $abs_dest,
+			'rel' => $rel_dest,
+		];
 	}
 
 	/**

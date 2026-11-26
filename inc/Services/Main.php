@@ -42,15 +42,11 @@ class Main extends Service implements Kernel {
 	 * @return void
 	 */
 	public function register_webp_img_creation( $attachment_id ): void {
-		// Get source props.
-		$this->source = [
-			'id'  => (int) $attachment_id,
-			'url' => (string) wp_get_attachment_url( $attachment_id ),
-		];
+		$img_url = (string) wp_get_attachment_url( $attachment_id );
 
 		// Ensure this is allowed.
 		if ( icfw_get_settings( 'upload' ) ) {
-			$this->converter->convert();
+			$this->converter->convert( (int) $attachment_id, $img_url );
 		}
 	}
 
@@ -78,14 +74,11 @@ class Main extends Service implements Kernel {
 
 		// Convert srcset images.
 		foreach ( ( $metadata['sizes'] ?? [] ) as $img ) {
-			$this->source = [
-				'id'  => (int) $attachment_id,
-				'url' => trailingslashit( $img_url_prefix ) . ( $img['file'] ?? '' ),
-			];
+			$size_url = trailingslashit( $img_url_prefix ) . ( $img['file'] ?? '' );
 
 			// Ensure this is allowed.
 			if ( icfw_get_settings( 'upload' ) ) {
-				$this->converter->convert();
+				$this->converter->convert( (int) $attachment_id, $size_url );
 			}
 		}
 
