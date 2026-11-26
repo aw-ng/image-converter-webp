@@ -195,7 +195,6 @@ class PageLoad extends Service implements Kernel {
 		// Get image ID.
 		if ( ! $img_id ) {
 			$img_id = attachment_url_to_postid( $img_url );
-			error_log( '|||||||||||| Attachment ID not provided, attempting to get it from URL: ' . $img_url );
 		}
 
 		// Convert image to WebP.

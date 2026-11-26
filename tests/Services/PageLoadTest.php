@@ -221,6 +221,11 @@ class PageLoadTest extends WPMockTestCase {
 			->andReturn( 'https://example.com/wp-content/uploads/2025/12/image-799x1024.png 799w, https://example.com/wp-content/uploads/2025/12/image-234x300.png 234w' );
 
 		$processor->shouldReceive( 'set_attribute' )
+			->once()
+			->with( 'src', 'https://example.com/wp-content/uploads/2025/12/image-799x1024.webp' )
+			->andReturn( true );
+
+		$processor->shouldReceive( 'set_attribute' )
 			->with( 'srcset', 'https://example.com/wp-content/uploads/2025/12/image-799x1024.webp 799w, https://example.com/wp-content/uploads/2025/12/image-234x300.webp 234w' )
 			->andReturn( true );
 
@@ -283,6 +288,11 @@ class PageLoadTest extends WPMockTestCase {
 		$processor->shouldReceive( 'get_attribute' )
 			->with( 'srcset' )
 			->andReturn( 'https://example.com/wp-content/uploads/2025/12/image-799x1024.png 799w, https://example.com/wp-content/uploads/2025/12/image-234x300.png 234w' );
+
+		$processor->shouldReceive( 'set_attribute' )
+			->once()
+			->with( 'src', 'https://example.com/wp-content/uploads/2025/12/image-799x1024.webp' )
+			->andReturn( true );
 
 		$processor->shouldReceive( 'set_attribute' )
 			->with( 'srcset', 'https://example.com/wp-content/uploads/2025/12/image-799x1024.png 799w, https://example.com/wp-content/uploads/2025/12/image-234x300.png 234w' )
