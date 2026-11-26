@@ -17,6 +17,7 @@
 * Chore: Stop hard-coding stylesheet `url` and `version`.
 * Chore: Replace `DOMDocument` handling with `WP_HTML_Tag_Processor`.
 * Fix: Fix `i18n` misuse on plugin settings page.
+* Refactor: Pass attachment ID and source URL to `Converter::convert()` as arguments instead of shared mutable state.
 
 ## 1.6.0
 * Feat: Add `More Plugins` options page.
